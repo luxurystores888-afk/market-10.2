@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 📱 MOBILE PWA OPTIMIZATIONS */
+@layer base {
+  /* Touch-friendly tap targets */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+    @apply touch-manipulation;
+  }
+  
+  /* Improved mobile scrolling */
+  * {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* Better mobile form inputs */
+  input, button, select, textarea {
+    @apply touch-manipulation;
+  }
+  
+  /* Mobile-optimized text sizes */
+  @media (max-width: 768px) {
+    .mobile-text-lg { font-size: 1.125rem; }
+    .mobile-text-base { font-size: 1rem; }
+    .mobile-text-sm { font-size: 0.875rem; }
+  }
+  
+  /* Prevent zoom on input focus for iOS */
+  @media screen and (-webkit-min-device-pixel-ratio: 0) {
+    input, select, textarea {
+      font-size: 16px;
+    }
+  }
+  
+  /* Better mobile button interactions */
+  .mobile-button {
+    @apply px-6 py-4 text-base font-medium rounded-lg touch-manipulation transition-all duration-200;
+    min-height: 48px;
+  }
+  
+  /* Touch-friendly card interactions */
+  .mobile-card {
+    @apply touch-manipulation transition-transform duration-200 active:scale-95;
+  }
+}
+
+/* 🎮 MOBILE GAMING OPTIMIZATIONS */
+@layer components {
+  .mobile-game-controls {
+    @apply fixed bottom-4 left-4 right-4 z-50 flex justify-center space-x-4;
+  }
+  
+  .mobile-game-button {
+    @apply bg-black/80 border border-cyan-500 text-cyan-400 rounded-full touch-manipulation;
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
+    min-height: 60px;
+  }
+}
+
+/* 🛒 MOBILE E-COMMERCE OPTIMIZATIONS */
+@layer utilities {
+  .mobile-product-actions {
+    @apply flex flex-col space-y-2 p-4 bg-black/90 backdrop-blur-xl border-t border-cyan-500/30;
+  }
+  
+  .mobile-checkout-button {
+    @apply w-full py-4 text-lg font-semibold rounded-xl touch-manipulation transition-all duration-200;
+    min-height: 56px;
+  }
+  
+  /* Better mobile search */
+  .mobile-search {
+    @apply w-full py-3 px-4 text-base rounded-lg touch-manipulation;
+    min-height: 48px;
+  }
+  
+  /* Mobile-first navigation */
+  .mobile-nav-item {
+    @apply block py-4 px-6 text-lg font-medium touch-manipulation transition-colors duration-200;
+    min-height: 56px;
+  }
+}

@@ -1,0 +1,21 @@
+# Ignore non-project directories and junk
+AppData/
+.groupbuyseotools/
+.vcpkg/
+.vscode/
+attached_assets/
+uploads/
+dist/
+node_modules/
+.vscode/
+*.log
+*.zip
+*.tar.gz
+*.gz
+.DS_Store
+Thumbs.db
+# Docker/VM runtime
+AppData/Local/Docker/
+# Any other temp/backup files
+*.bak
+*.tmp
