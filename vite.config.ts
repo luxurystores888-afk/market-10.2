@@ -1,11 +1,11 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
+import wasm from "vite-plugin-wasm";
+import topLevelAwait from "vite-plugin-top-level-await";
 
 export default defineConfig({
-  plugins: [
-    react(),
-  ],
+  plugins: [react(), wasm(), topLevelAwait()],
   root: ".",
   resolve: {
     alias: {
@@ -69,4 +69,5 @@ export default defineConfig({
     host: "0.0.0.0",
     port: 5000,
   },
+  optimizeDeps: { include: ['@assemblyscript/loader'] }
 });

@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ShoppingCart, Eye, Heart, Zap, Box, Glasses } from 'lucide-react';
 import { formatPrice } from '../utils/price';
 import { HolographicProductDisplay } from './HolographicProductDisplay';
 import { ARVRExperience } from './ARVRExperience';
 import Product3DViewer from './Product3DViewer';
 import { Link } from 'react-router-dom';
+import { TwitterShareButton, RedditShareButton } from 'react-share';
+import { ARViewer } from '../components/ARViewer';
 
 interface Product {
   id: string;
@@ -26,6 +28,7 @@ interface ProductCardProps {
 export function ProductCard({ product, onAddToCart, onQuickView }: ProductCardProps) {
   const [show3D, setShow3D] = useState(false);
   const [showARVR, setShowARVR] = useState(false);
+  const [dynamicPrice, setDynamicPrice] = useState<number | string>(product.price);
 
   const handleOpen3D = () => {
     setShow3D(true);
@@ -39,6 +42,20 @@ export function ProductCard({ product, onAddToCart, onQuickView }: ProductCardPr
     const subscription = await navigator.serviceWorker.ready.then(reg => reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: 'vapidPublicKey' }));
     await fetch('/api/subscribe-restock', { method: 'POST', body: JSON.stringify({ productId, subscription }) });
   }
+
+  // Add NFT mint function
+  const mintNFT = (product: Product) => {
+    const nftData = {
+      name: `${product.name} NFT`,
+      image: btoa(`<svg><text>${product.name}</text></svg>`) // Simple base64 placeholder
+    };
+    localStorage.setItem(`nft_${product.id}`, JSON.stringify(nftData));
+    alert(`Minted ${product.name} NFT! Check local storage for your Omniversal Collectible.`);
+  };
+
+  useEffect(() => {
+    // Call getDynamicPrice(product.id).then(setPrice);
+  }, []);
 
   return (
     <div className="bg-gray-900/50 border border-cyan-500/30 rounded-xl overflow-hidden hover:border-purple-500/50 transition-all duration-300 group">
@@ -162,7 +179,7 @@ export function ProductCard({ product, onAddToCart, onQuickView }: ProductCardPr
         <div className="flex items-center justify-between">
           <div>
             <span className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
-              ${formatPrice(product.price)}
+              ${dynamicPrice}
             </span>
           </div>
           
@@ -205,6 +222,20 @@ export function ProductCard({ product, onAddToCart, onQuickView }: ProductCardPr
               <span className="text-base font-medium">Add to Cart</span>
             </button>
           </div>
+        </div>
+        <div className="flex gap-2 mt-2">
+          <TwitterShareButton url={`http://yourdomain.com/product/${product.id}`} title={product.name}>
+            <button className="text-blue-400 hover:text-blue-300">Share on Twitter</button>
+          </TwitterShareButton>
+          <RedditShareButton url={`http://yourdomain.com/product/${product.id}`} title={product.name}>
+            <button className="text-orange-400 hover:text-orange-300">Share on Reddit</button>
+          </RedditShareButton>
+          <button 
+            onClick={() => mintNFT(product)}
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded text-sm mt-2"
+          >
+            Mint NFT (Free!)
+          </button>
         </div>
       </div>
       

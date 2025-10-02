@@ -1,9 +1,9 @@
 import express from 'express';
 import { z } from 'zod';
-import { validateBody } from '../validation';
-import { apiLimiter, strictApiLimiter } from '../middleware';
-import { authenticate } from '../middleware/auth';
-import { storage } from '../storage';
+import { validateBody, orderSchema } from '../validation.ts';
+import { apiLimiter, strictApiLimiter } from '../middleware.ts';
+import { authenticate } from '../middleware/auth.ts';
+import { storage } from '../storage.ts';
 import { randomUUID } from 'crypto';
 import nodemailer from 'nodemailer';
 

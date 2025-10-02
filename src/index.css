@@ -86,3 +86,60 @@
     min-height: 56px;
   }
 }
+
+/* High contrast */
+.high-contrast {
+  filter: contrast(1.5) brightness(1.2);
+}
+
+:root {
+  --background: white;
+  --foreground: black;
+}
+
+.dark {
+  --background: black;
+  --foreground: white;
+  --primary: #0ff;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.hover\:rotate-y-180:hover {
+  transform: perspective(1000px) rotateY(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+button, a[role="button"] {
+  min-width: 48px;
+  min-height: 48px;
+  padding: 12px;
+}
+
+.rtl {
+  direction: rtl;
+}
+
+.parallax {
+  background-attachment: fixed;
+}
+
+/* Example micro */
+.hover-glow:hover { box-shadow: 0 0 10px cyan; }
+.button-ripple { position: relative; overflow: hidden; }
+.button-ripple:after { content: ''; position: absolute; background: rgba(255,255,255,0.2); border-radius: 50%; animation: ripple 0.6s; }
+@keyframes ripple { to { transform: scale(4); opacity: 0; } }
+/* Add 99 more similar for polish */
+
+.contain-paint { contain: paint; }
+
+img { width: 100%; height: auto; }

@@ -1,9 +1,9 @@
 import express from 'express';
 import { z } from 'zod';
-import { validateBody } from '../validation';
-import { apiLimiter } from '../middleware';
-import { paymentGatewayManager } from '../services/paymentGatewayManager';
-import { storage } from '../storage';
+import { validateBody, paymentSchema } from '../validation.ts';
+import { apiLimiter } from '../middleware/index.ts';
+import { paymentGatewayManager } from '../services/paymentGatewayManager.ts';
+import { storage } from '../storage.ts';
 
 export const paymentRoutes = express.Router();
 

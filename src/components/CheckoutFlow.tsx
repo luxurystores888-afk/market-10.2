@@ -15,6 +15,11 @@ import { Badge } from './ui/badge';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 
+// Add Stripe import and logic
+import { loadStripe } from '@stripe/stripe-js';
+
+const stripePromise = loadStripe('pk_test_yourpublickey'); // Free test key; replace with yours
+
 interface CheckoutFlowProps {
   isOpen: boolean;
   onClose: () => void;
@@ -72,6 +77,13 @@ export function CheckoutFlow({ isOpen, onClose, onOrderComplete }: CheckoutFlowP
   const [orderSummary, setOrderSummary] = useState<OrderSummary | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [orderId, setOrderId] = useState<string | null>(null);
+
+  // Add state and effect for upsells
+  const [upsells, setUpsells] = useState([]);
+
+  useEffect(() => {
+    fetch('/api/recommendations/cart').then(res => res.json()).then(setUpsells);
+  }, []);
 
   // Form states
   const [shippingAddress, setShippingAddress] = useState<ShippingAddress>({

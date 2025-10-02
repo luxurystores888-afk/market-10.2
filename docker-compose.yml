@@ -1,0 +1,20 @@
+version: '3'
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+  api:
+    build: ./api
+    ports:
+      - "3001:3001"
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: example
+  stable-diffusion:
+    image: abdullahsaid/stable-diffusion-webui-forge
+    ports:
+      - "7860:7860"
+    volumes:
+      - ./sd-models:/models

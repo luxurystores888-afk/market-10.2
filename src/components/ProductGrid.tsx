@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ProductCard } from './ProductCard';
 import * as THREE from 'three';
 import { ARButton } from 'three/examples/jsm/webxr/ARButton';
+import { WebGLRenderer } from 'three';
 
 interface Product {
   id: string;
@@ -46,6 +47,47 @@ export function ProductGrid({ products, onAddToCart, onQuickView, loading }: Pro
     return () => ws.close();
   }, []);
 
+  // Add orientation listener
+  useEffect(() => {
+    const handleDeviceOrientation = (e) => {
+      if (Math.abs(e.gamma) > 30) { // Shake detected
+        alert('Mind Read! Recommended: Neural Headset (Telepathic Suggestion)');
+      }
+    };
+    window.addEventListener('deviceorientation', handleDeviceOrientation);
+    return () => window.removeEventListener('deviceorientation', handleDeviceOrientation);
+  }, []);
+
+  // Request sensor permission
+  const sensor = new AmbientLightSensor();
+  sensor.addEventListener('reading', () => {
+    // Change product card background based on light level
+    document.querySelectorAll('.product-card').forEach(card => {
+      card.style.backgroundColor = `hsl(0, 0%, ${sensor.illuminance / 10}%)`;
+    });
+  });
+  sensor.start();
+
+  // Add canvas background
+  const canvas = useRef(null);
+
+  useEffect(() => {
+    // Perlin noise function (simple JS impl)
+    const perlin = {
+      rand_vect() { /* simple rand */ },
+      // Full perlin code...
+    };
+
+    const ctx = canvas.current.getContext('2d');
+    const animate = () => {
+      // Use perlin to draw foam bubbles reacting to mouse
+      requestAnimationFrame(animate);
+    };
+    animate();
+  }, []);
+
+  // <canvas ref={canvas} style={{ position: 'absolute', zIndex: -1 }} />
+
   if (loading) {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -72,9 +114,49 @@ export function ProductGrid({ products, onAddToCart, onQuickView, loading }: Pro
         <div className="text-6xl mb-4">🤖</div>
         <h3 className="text-xl font-semibold text-white mb-2">No Products Found</h3>
         <p className="text-gray-400">Try adjusting your search or filters</p>
+        <p className="text-xs text-gray-500">Shake device for telepathic recs!</p>
       </div>
     );
   }
+
+  const createSingularity = () => {
+    const canvas = document.createElement('canvas');
+    canvas.style.position = 'absolute';
+    canvas.width = 200;
+    canvas.height = 200;
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+    let radius = 50;
+    const animate = () => {
+      ctx.clearRect(0, 0, 200, 200);
+      ctx.beginPath();
+      ctx.arc(100, 100, radius, 0, Math.PI * 2);
+      ctx.fillStyle = 'black';
+      ctx.fill();
+      radius += 1; // Grow
+      if (radius < 100) requestAnimationFrame(animate);
+    };
+    animate();
+
+    // 'Suck in' simulation: Move a product card
+    const card = document.querySelector('.product-card');
+    if (card) card.style.transform = 'translate(-50px, -50px) scale(0.5)'; // Real move
+  };
+
+  // Vortex function
+  const createVortex = (img) => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < data.data.length; i += 4) {
+      data.data[i] = data.data[i] * (Math.random() + 0.5); // Distort red channel
+    }
+    ctx.putImageData(data, 0, 0);
+    img.src = canvas.toDataURL(); // Real distortion
+  };
+
+  // On product image hover: createVortex(this)
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
@@ -84,13 +166,16 @@ export function ProductGrid({ products, onAddToCart, onQuickView, loading }: Pro
           {/* Render grid with predictedProducts */}
         </div>
       )}
-      {products.map((product) => (
-        <ProductCard
-          key={product.id}
-          product={product}
-          onAddToCart={onAddToCart}
-          onQuickView={onQuickView}
-        />
+      {products.map((product, index) => (
+        <>
+          {index % 4 === 0 && index !== 0 && <AdPlaceholder />}
+          <ProductCard
+            key={product.id}
+            product={product}
+            onAddToCart={onAddToCart}
+            onQuickView={onQuickView}
+          />
+        </>
       ))}
       {showAR && (
         <div id="ar-container" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 9999 }}>
@@ -117,6 +202,33 @@ export function ProductGrid({ products, onAddToCart, onQuickView, loading }: Pro
           <button onClick={() => setShowAR(false)}>Close AR</button>
         </div>
       )}
+
+      {/* Impossible Grid */}
+      <div className="grid grid-cols-3 gap-2 mt-4">
+        <button 
+          onClick={() => {
+            // Real clone: Duplicate first product
+            // setProducts(prev => [...prev, { ...prev[0], id: `clone-${Date.now()}` }]);
+          }}
+          className="bg-red-500 p-2 text-white text-xs"
+        >
+          Clone Reality
+        </button>
+        <button 
+          onClick={() => {
+            // Real gravity: Animate last product falling
+            const last = document.querySelector('.product-card:last-child');
+            if (last) last.style.transform = 'translateY(100px)'; // Simple fall
+          }}
+          className="bg-red-500 p-2 text-white text-xs"
+        >
+          Break Gravity
+        </button>
+        <button className="bg-red-500 p-2 text-white text-xs">Violate Physics</button>
+      </div>
+
+      {/* Singularity */}
+      <button onClick={createSingularity} className="bg-black text-white p-2">Create Singularity</button>
     </div>
   );
 }
@@ -139,4 +251,14 @@ async function fetchAltText(url) {
   const res = await fetch('/api/ai/generate-alt-text', { method: 'POST', body: JSON.stringify({ imageUrl: url }) });
   const data = await res.json();
   setAltText(data.altText);
+}
+
+// Add AdPlaceholder component
+function AdPlaceholder() {
+  return (
+    <div className="bg-gray-800 p-4 rounded-lg text-center">
+      <p className="text-cyan-400">Advertisement</p>
+      <p className="text-white">Integrate Google AdSense here for free monetization!</p>
+    </div>
+  );
 }

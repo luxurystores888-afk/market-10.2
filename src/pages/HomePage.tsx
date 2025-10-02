@@ -1,7 +1,21 @@
-import React, { useState, useEffect, Suspense, lazy } from 'react';
+import React, { useState, useEffect, Suspense, lazy, useRef } from 'react';
 import { ProductGrid } from '../components/ProductGrid';
 import { Zap, Shield, Cpu, Rocket, Sparkles, Eye, Camera, Scan } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../components/ui/dialog'; // Assuming shadcn/ui or similar
+import ViralContest from '../components/ViralContest';
+import FocusLock from 'react-focus-lock';
+import { PowerfulOfSpreader } from '../components/PowerfulOfSpreader';
+import { Gamification } from '../components/Gamification';
+import { RealTimeChat } from '../components/RealTimeChat';
+import { CollaborativeEditor } from '../components/CollaborativeEditor';
+import { PhysicsAnimation } from '../components/PhysicsAnimation';
+import { AdaptiveDesign } from '../components/AdaptiveDesign';
+import { SocialFeed } from '../components/SocialFeed';
+import { EdgeCDN } from '../components/EdgeCDN';
+import { ParticleEffects } from '../components/ParticleEffects';
+import { CommunityContent } from '../components/CommunityContent';
+import { EnterpriseSolutions } from '../components/EnterpriseSolutions';
+import { Scene, PerspectiveCamera, WebGLRenderer, BufferGeometry, Float32BufferAttribute, PointsMaterial, Points, MathUtils } from 'three';
 
 // Lazy load AI components
 const MultiAIStatus = lazy(() => import('../components/MultiAIStatus'));
@@ -21,6 +35,39 @@ interface Product {
   tags?: string[];
 }
 
+// Move this to top:
+import init, { fibonacci } from './fib.wasm';
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').then(reg => {
+    console.log('Cosmic Monitor Active!');
+  });
+}
+
+// Translations
+const translations = {
+  en: { greeting: 'Hello' },
+  ar: { greeting: 'مرحبا' }
+};
+
+// Use: <p>{translations[locale].greeting}</p>
+
+// Cache function
+const getCached = (key) => {
+  const cached = localStorage.getItem(key);
+  if (cached) {
+    const { data, time } = JSON.parse(cached);
+    if (Date.now() - time < 3600000) return data;
+  }
+  return null;
+};
+
+const setCached = (key, data) => {
+  localStorage.setItem(key, JSON.stringify({ data, time: Date.now() }));
+};
+
+// Use in fetch
+
 export function HomePage() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,10 +76,153 @@ export function HomePage() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [searchResults, setSearchResults] = useState<Product[]>([]);
 
-  useEffect(() => {
-    fetchFeaturedProducts();
-  }, []);
+  // Add cart state and functions
+  const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem('cart');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
 
+  const addToCart = (product: Product) => {
+    const updatedCart = [...cart, { ...product, quantity: 1 }];
+    setCart(updatedCart);
+    localStorage.setItem('cart', JSON.stringify(updatedCart));
+    alert(`${product.name} added to cart!`);
+  };
+
+  // On add
+  navigator.vibrate([100, 30, 100]);
+
+  // Add state for AI modal
+  const [showAIModal, setShowAIModal] = useState(false);
+
+  // Add state for time travel
+  const [timeTraveledPrice, setTimeTraveledPrice] = useState<string | null>(null);
+
+  // Add dashboard state
+  const [cosmicStats, setCosmicStats] = useState({ sessionTime: 0, actions: 0 });
+
+  // Control Center state
+  const [showControlCenter, setShowControlCenter] = useState(false);
+
+  // Consolidate to:
+  const [waveFrequency, setWaveFrequency] = useState(() => parseInt(localStorage.getItem('waveFreq') || '10'));
+  const [isPlayingWaves, setIsPlayingWaves] = useState(false);
+  let audioCtx, osc1, osc2;
+
+  // Functions as is.
+
+  const startWaves = () => {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    osc1 = audioCtx.createOscillator();
+    osc2 = audioCtx.createOscillator();
+    osc1.frequency.setValueAtTime(200, audioCtx.currentTime); // Base
+    osc2.frequency.setValueAtTime(200 + waveFrequency, audioCtx.currentTime); // Delta
+    osc1.connect(audioCtx.destination);
+    osc2.connect(audioCtx.destination);
+    osc1.start();
+    osc2.start();
+    setIsPlayingWaves(true);
+  };
+
+  const stopWaves = () => {
+    osc1.stop();
+    osc2.stop();
+    audioCtx.close();
+    setIsPlayingWaves(false);
+  };
+
+  const updateFrequency = (freq) => {
+    setWaveFrequency(freq);
+    localStorage.setItem('waveFreq', freq.toString());
+    if (isPlayingWaves) {
+      stopWaves();
+      startWaves();
+    }
+  };
+
+  // Add WebGL Canvas
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    if (isPlayingWaves && canvasRef.current) {
+      const canvas = canvasRef.current;
+      const gl = canvas.getContext('webgl');
+      if (!gl) return;
+
+      // Simple vertex shader
+      const vsSource = `
+        attribute vec4 aPosition;
+        void main() {
+          gl_Position = aPosition;
+        }
+      `;
+
+      // Fragment shader for wave viz (synced to freq)
+      const fsSource = `
+        precision mediump float;
+        uniform float uTime;
+        uniform float uFreq;
+        void main() {
+          vec2 uv = gl_FragCoord.xy / vec2(300.0, 200.0);
+          float wave = sin(uv.x * 10.0 + uTime) * (uFreq / 40.0);
+          gl_FragColor = vec4(uv.x, uv.y + wave, 0.5 + wave, 1.0);
+        }
+      `;
+
+      // Compile shaders, program, etc. (simplified - assume full init)
+      const shaderProgram = initShaderProgram(gl, vsSource, fsSource);
+      const positionBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+      const positions = [-1, -1, 1, -1, -1, 1, 1, 1];
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+
+      const aPosition = gl.getAttribLocation(shaderProgram, 'aPosition');
+      gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
+      gl.enableVertexAttribArray(aPosition);
+
+      const uTime = gl.getUniformLocation(shaderProgram, 'uTime');
+      const uFreq = gl.getUniformLocation(shaderProgram, 'uFreq');
+
+      const render = (time) => {
+        gl.uniform1f(uTime, time / 1000);
+        gl.uniform1f(uFreq, waveFrequency);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        requestAnimationFrame(render);
+      };
+      requestAnimationFrame(render);
+    }
+  }, [isPlayingWaves, waveFrequency]);
+
+  // Helper function (add this)
+  function initShaderProgram(gl, vsSource, fsSource) {
+    const vs = gl.createShader(gl.VERTEX_SHADER);
+    gl.shaderSource(vs, vsSource);
+    gl.compileShader(vs);
+
+    const fs = gl.createShader(gl.FRAGMENT_SHADER);
+    gl.shaderSource(fs, fsSource);
+    gl.compileShader(fs);
+
+    const program = gl.createProgram();
+    gl.attachShader(program, vs);
+    gl.attachShader(program, fs);
+    gl.linkProgram(program);
+    gl.useProgram(program);
+
+    if (!gl.getShaderParameter(vs, gl.COMPILE_STATUS)) {
+      console.error('Vertex shader error:', gl.getShaderInfoLog(vs));
+    }
+    if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS)) {
+      console.error('Fragment shader error:', gl.getShaderInfoLog(fs));
+    }
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      console.error('Program link error:', gl.getProgramInfoLog(program));
+    }
+
+    return program;
+  }
+
+  // UI in a section
   const fetchFeaturedProducts = async () => {
     try {
       const response = await fetch('/api/products?limit=8');
@@ -78,22 +268,206 @@ export function HomePage() {
     }
   };
 
-  // TODO: Implement cart functionality
-  const addToCart = (product: Product) => {
-    const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const updatedCart = [...currentCart, product];
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
-    console.log(`Added ${product.name} to cart`);
-  };
-
   const openQuickView = (product: Product) => {
     setSelectedProduct(product);
   };
 
+  // Add notification request
+  useEffect(() => {
+    Notification.requestPermission();
+  }, []);
+
+  // On addToCart
+  if (Notification.permission === 'granted') {
+    new Notification(`${product.name} added to cart!`);
+  }
+
+  // Add scene setup in useEffect
+  useEffect(() => {
+    const scene = new Scene();
+    const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Simple nebula (particles)
+    const geometry = new BufferGeometry();
+    const vertices = [];
+    for (let i = 0; i < 10000; i++) {
+      vertices.push(MathUtils.randFloatSpread(2000), MathUtils.randFloatSpread(2000), MathUtils.randFloatSpread(2000));
+    }
+    geometry.setAttribute('position', new Float32BufferAttribute(vertices, 3));
+    const material = new PointsMaterial({ color: 0x888888 });
+    const points = new Points(geometry, material);
+    scene.add(points);
+
+    camera.position.z = 5;
+
+    const animate = () => {
+      requestAnimationFrame(animate);
+      points.rotation.x += 0.001;
+      points.rotation.y += 0.002;
+      renderer.render(scene, camera);
+    };
+    animate();
+
+    // Mouse react
+    const onMouseMove = (e) => {
+      camera.position.x = (e.clientX / window.innerWidth) * 2 - 1;
+      camera.position.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    };
+    window.addEventListener('mousemove', onMouseMove);
+
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+      document.body.removeChild(renderer.domElement);
+    };
+  }, []);
+
+  // In WebGL useEffect, add portal
+  const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
+  const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+  const torus = new THREE.Mesh(geometry, material);
+  scene.add(torus);
+
+  // Animate torus rotation
+  torus.rotation.x += 0.01;
+  torus.rotation.y += 0.005;
+
+  // On click, 'portal' - change scene color or something
+  canvas.addEventListener('click', () => {
+    material.color.setHex(Math.random() * 0xffffff); // Real dimension change
+  });
+
+  // Style: Set z-index low for background
+
+  // Check for WebGPU support
+  if (navigator.gpu) {
+    // WebGPU code for fractal (mandelbrot set rendering)
+  } else {
+    // Fallback to WebGL
+  }
+
+  // Add canvas and rendering loop similar to previous WebGL.
+
+  // Parallel Self
+  const [parallelPoints, setParallelPoints] = useState(0);
+
+  useEffect(() => {
+    const workers = [];
+    for (let i = 0; i < 3; i++) {
+      const worker = new Worker(URL.createObjectURL(new Blob([`
+        setInterval(() => self.postMessage(Math.random() * 5), 2000);
+      `])));
+      worker.onmessage = (e) => setParallelPoints(prev => prev + e.data);
+      workers.push(worker);
+    }
+    return () => workers.forEach(w => w.terminate());
+  }, []);
+
+  // Display
+  <p>Parallel Selves Points: {parallelPoints.toFixed(2)} (Computing in Multiverse!)</p>
+
+  // Add observer
+  useEffect(() => {
+    const observer = new ResizeObserver(entries => {
+      // Adjust styles based on size
+      document.body.style.fontSize = `${entries[0].contentRect.width / 100}px`;
+    });
+    observer.observe(document.body);
+    return () => observer.disconnect();
+  }, []);
+
+  // State
+  const [locale, setLocale] = useState(localStorage.getItem('locale') || 'en');
+
+  // Set state with navigator.language.split('-')[0]
+  useEffect(() => {
+    const detectedLocale = navigator.language.split('-')[0];
+    setLocale(detectedLocale);
+    localStorage.setItem('locale', detectedLocale);
+  }, []);
+
+  // Button
+  <select onChange={(e) => {
+    setLocale(e.target.value);
+    localStorage.setItem('locale', e.target.value);
+  }}>
+    <option value="en">English</option>
+    <option value="ar">Arabic</option>
+  </select>
+
+  // Use locale in Intl
+
+  // Fetch RSS
+  useEffect(() => {
+    fetch('rss.url').then(res => res.text()).then(xml => {
+      // Parse with DOMParser or library
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(xml, 'application/xml');
+      // Extract items
+    });
+  }, []);
+
+  // Generate iCal
+  const generateICal = () => {
+    const ical = 'BEGIN:VCALENDAR...';
+    const blob = new Blob([ical], { type: 'text/calendar' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'event.ics';
+    a.click();
+  };
+
+  // Button: <button onClick={generateICal}>Add to Calendar</button>
+
+  // Template function
+  const renderEmail = (template, data) => template.replace(/{{key}}/g, data.key);
+
+  // Use for fake emails
+
+  // SMS function
+  const sendSMS = (msg) => console.log(`SMS: ${msg}`);
+
+  // IndexedDB setup
+  const db = indexedDB.open('offlineForms', 1);
+  // On submit, if (!navigator.onLine) store in DB
+
+  // Battery Status-Aware Loading
+  useEffect(() => {
+    navigator.getBattery().then(battery => {
+      if (battery.level < 0.2) {
+        // Disable animations and heavy features
+        // This would typically involve setting state variables
+        // For example, setIsPlayingWaves(false);
+        // setShowAdvancedFeatures(false);
+        // setShowVisualSearch(false);
+        // etc.
+      }
+    });
+  }, []);
+
+  // confetti function with random colors
+
+  // State for poll options, vote buttons
+
+  // Load WASM
+  useEffect(() => {
+    init().then(() => {
+      setInterval(() => {
+        const num = fibonacci(10); // Real WASM call
+        setPattern(num);
+      }, 1000);
+    });
+  }, []);
+
+  // <p>Eternal Pattern: {pattern}</p>
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-cyan-900/20 star-field lightning-bg">
+    <AdaptiveDesign>
       {/* Hero Section */}
-      <section className="relative py-20 px-4 overflow-hidden">
+      <section id="main-content" className="relative py-20 px-4 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-cyan-500/10"></div>
         <div className="container mx-auto text-center relative z-10">
           <h1 className="text-5xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 mb-6 ultra-text-glow dynamic-gradient">
@@ -295,6 +669,69 @@ export function HomePage() {
         <Scan className="h-6 w-6" />
       </button>
 
+      {/* AI Modal component */}
+      {showAIModal && (
+        <FocusLock>
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-gray-900 p-6 rounded-lg max-w-md w-full">
+              <h2 className="text-2xl font-bold text-cyan-400 mb-4">Year 10000 AI Assistant</h2>
+              <p className="text-gray-300 mb-4">Ask me anything about products or the future!</p>
+              <input 
+                type="text" 
+                placeholder="Type your query..." 
+                className="w-full p-2 mb-4 bg-gray-800 text-white rounded"
+              />
+              <div className="flex justify-end">
+                <button 
+                  onClick={() => setShowAIModal(false)}
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2"
+                >
+                  Close
+                </button>
+                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                  Send
+                </button>
+              </div>
+            </div>
+          </div>
+        </FocusLock>
+      )}
+
+      {/* Add button to open modal */}
+      <button 
+        onClick={() => setShowAIModal(true)}
+        className="fixed bottom-4 right-4 bg-purple-600 hover:bg-purple-800 text-white p-4 rounded-full shadow-lg"
+      >
+        🤖 AI Chat (Year 10000)
+      </button>
+
+      {/* Control Center Panel */}
+      {showControlCenter && (
+        <div className="fixed top-20 right-4 bg-gray-800 p-4 rounded shadow-lg">
+          <h3 className="text-lg font-bold mb-2">Ultimate Control Center</h3>
+          <button onClick={() => localStorage.clear()} className="block mb-2 text-red-400">
+            Reset Universe
+          </button>
+          <button onClick={() => setShowAIModal(true)} className="block mb-2 text-blue-400">
+            Activate AI
+          </button>
+          <button onClick={() => setShowControlCenter(false)}>Close</button>
+        </div>
+      )}
+
+      {/* Toggle button */}
+      <button 
+        onClick={() => setShowControlCenter(!showControlCenter)}
+        className="fixed top-4 right-4 bg-gold-500 text-white p-2 rounded"
+      >
+        Control Center (God Mode)
+      </button>
+
+      {/* Toggle button */}
+      <button onClick={() => document.body.classList.toggle('color-blind')}>Simulate Color Blindness</button>
+
+      {/* CSS: .color-blind { filter: grayscale(1) contrast(1.2); } */}
+
       {selectedProduct && (
         <Dialog open={!!selectedProduct} onOpenChange={() => setSelectedProduct(null)}>
           <DialogContent>
@@ -307,9 +744,44 @@ export function HomePage() {
             <button onClick={() => addToCart(selectedProduct)} className="mt-4 bg-blue-500 text-white px-4 py-2 rounded">
               Add to Cart
             </button>
+            <button 
+              onClick={() => timeTravel(selectedProduct)}
+              className="bg-yellow-500 hover:bg-yellow-700 text-white px-2 py-1 rounded"
+            >
+              Time Travel Preview
+            </button>
           </DialogContent>
         </Dialog>
       )}
-    </div>
+      <ViralContest />
+      <Gamification />
+      <RealTimeChat />
+      <CollaborativeEditor />
+      <PhysicsAnimation />
+      <SocialFeed />
+      <EdgeCDN />
+      <ParticleEffects />
+      <CommunityContent />
+      <EnterpriseSolutions />
+      <div className="fixed bottom-0 left-0 p-2 bg-black text-white text-xs">
+        Cosmic Status: Session {cosmicStats.sessionTime}s | Actions: {cosmicStats.actions}
+      </div>
+      {/* Add WebGL Canvas */}
+      <canvas ref={canvasRef} width="300" height="200" className={`${isPlayingWaves ? 'block' : 'hidden'} mt-4`}></canvas>
+      {/* If battery.level < 0.2, show <p>Charge for better experience!</p> */}
+      {navigator.getBattery().then(battery => {
+        if (battery.level < 0.2) {
+          return (
+            <p className="fixed bottom-4 left-4 bg-yellow-500 text-white p-2 rounded-full shadow-lg">
+              Charge for better experience!
+            </p>
+          );
+        }
+        return null;
+      })}
+      <section className="mt-8">
+        <PowerfulOfSpreader />
+      </section>
+    </AdaptiveDesign>
   );
 }

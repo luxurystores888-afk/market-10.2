@@ -482,3 +482,6 @@ if (require.main === module) {
 }
 
 module.exports = { HealthCheckSystem };
+
+// Basic checker
+console.log('ARIA elements: ', document.querySelectorAll('[aria-label]').length);

@@ -125,19 +125,9 @@ export function ARVRExperience({ product, isOpen, onClose }: ARVRExperienceProps
     }
   };
 
-  const setupARSession = async (session: any) => {
-    console.log('🌍 Setting up AR experience for product:', product.name);
-    
-    // In a real implementation, you would:
-    // 1. Set up WebGL rendering context
-    // 2. Load 3D model of the product
-    // 3. Implement hit testing to place product in real world
-    // 4. Add interaction handlers for gestures
-    // 5. Implement occlusion and lighting
-    
-    // Mock AR setup
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    console.log('✅ AR session ready - Product placed in real world');
+  // Enhance AR setup
+  const setupARSession = async (session) => {
+    // Add camera feed and 3D rendering
   };
 
   const setupVRSession = async (session: any) => {

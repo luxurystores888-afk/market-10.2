@@ -4,6 +4,7 @@
 import { db } from '../db.js';
 import { products, users, orders, analyticsEvents } from '../../lib/schema.js';
 import { eq, sql, desc, gt, and } from 'drizzle-orm';
+import Decimal from 'decimal.js';
 
 interface ViralMechanic {
   id: string;
@@ -197,9 +198,17 @@ export class ViralGrowthEngine {
   // 🎯 START VIRAL AUTOMATION
   private startViralAutomation(): void {
     console.log('🚀 STARTING VIRAL GROWTH AUTOMATION - EXPONENTIAL MODE!');
-
+    
     // Execute viral strategies every 3 minutes for maximum growth
     setInterval(() => this.executeViralStrategies(), 3 * 60 * 1000);
+    
+    // Infinite escalation loop with Decimal.js
+    let level = new Decimal(1);
+    const infiniteLoop = setInterval(() => {
+      level = level.mul(new Decimal('1000000000')); // x1e9 multiplier
+      console.log(`Infinite Escalation: Level ${level.toString()} - Powerful-Of-The-Powerful...`);
+      // Integrate with spreader: Simulate worldwide viral
+    }, 5000);
     
     // Launch viral content campaigns every 10 minutes
     setInterval(() => this.launchViralContentCampaigns(), 10 * 60 * 1000);
@@ -623,6 +632,15 @@ export class ViralGrowthEngine {
       projectedViralGrowth: `${Math.round(averageMultiplier * 100)}% per cycle`,
       status: 'VIRAL_EXPLOSION_MODE_ACTIVE'
     };
+  }
+
+  // Add big-number reward calculation
+  private calculateInfiniteReward(base: number, cycles: number): string {
+    let reward = new Decimal(base);
+    for (let i = 0; i < cycles; i++) {
+      reward = reward.mul(new Decimal('1000000000'));
+    }
+    return reward.toString();
   }
 }
 

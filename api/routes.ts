@@ -1,23 +1,23 @@
 import express from 'express';
-import { storage } from './storage';
-import { productRoutes } from './routes/productRoutes';
-import { aiRoutes } from './routes/aiRoutes';
-import { authRoutes } from './routes/authRoutes';
-import { performanceRoutes } from './routes/performanceRoutes';
-import { paymentRoutes } from './routes/paymentRoutes';
-import { orderRoutes } from './routes/orderRoutes';
-import wishlistRoutes from './routes/wishlistRoutes';
-import { analyticsRoutes } from './routes/analyticsRoutes';
-import { web3Routes } from './web3';
-import githubRoutes from './routes/githubRoutes';
-import enhancedRoutes from './routes/enhancedRoutes';
-import automationRoutes from './routes/automationRoutes';
-import communityRoutes from './routes/communityRoutes';
-import loyaltyRoutes from './routes/loyaltyRoutes';
-import supportRoutes from './routes/supportRoutes';
-import { validateBody, analyticsEventSchema } from './validation';
-import { apiLimiter, strictApiLimiter } from './middleware';
-import { requireAdmin, authenticate } from './middleware/auth';
+import { storage } from './storage.ts';
+import { productRoutes } from './routes/productRoutes.ts';
+import { aiRoutes } from './routes/aiRoutes.ts';
+import { authRoutes } from './routes/authRoutes.ts';
+import { performanceRoutes } from './routes/performanceRoutes.ts';
+import { paymentRoutes } from './routes/paymentRoutes.ts';
+import { orderRoutes } from './routes/orderRoutes.ts';
+import wishlistRoutes from './routes/wishlistRoutes.ts';
+import { analyticsRoutes } from './routes/analyticsRoutes.ts';
+import { web3Routes } from './web3.ts';
+import githubRoutes from './routes/githubRoutes.ts';
+import enhancedRoutes from './routes/enhancedRoutes.ts';
+import automationRoutes from './routes/automationRoutes.ts';
+import communityRoutes from './routes/communityRoutes.ts';
+import loyaltyRoutes from './routes/loyaltyRoutes.ts';
+import supportRoutes from './routes/supportRoutes.ts';
+import { validateBody, analyticsEventSchema } from './validation.ts';
+import { apiLimiter, strictApiLimiter } from './middleware.ts';
+import { requireAdmin, authenticate } from './middleware/auth.ts';
 
 export const router = express.Router();
 
@@ -96,6 +96,8 @@ router.get('/automation-test', async (req, res) => {
   }
 });
 
+// PUT /api/users/:id/role
+
 // Mount Web3 routes for blockchain functionality
 router.post('/web3/connect-wallet', web3Routes.connectWallet);
 router.post('/web3/disconnect-wallet', web3Routes.disconnectWallet);
@@ -149,6 +151,56 @@ router.post('/analytics', apiLimiter, validateBody(analyticsEventSchema), async 
     console.error('Error creating analytics event:', error);
     res.status(500).json({ error: 'Failed to create analytics event' });
   }
+});
+
+let stories = []; // In-memory for demo; use DB in production
+
+app.get('/api/stories', (req, res) => res.json(stories));
+
+app.post('/api/stories', (req, res) => {
+  const { content } = req.body;
+  stories.push({ content });
+  res.json({ success: true });
+});
+
+app.get('/api/recommendations/:productId', (req, res) => {
+  const { productId } = req.params;
+  const recs = getRecommendations(productId);
+  res.json(recs);
+});
+
+app.post('/api/generate-image', async (req, res) => {
+  const { prompt } = req.body;
+  // Proxy to Stable Diffusion API at localhost:7860
+  const response = await fetch('http://stable-diffusion:7860/sdapi/v1/txt2img', {
+    method: 'POST',
+    body: JSON.stringify({ prompt }),
+  });
+  const data = await response.json();
+  res.json(data);
+});
+
+app.post('/api/newsletter/subscribe', (req, res) => {
+  const { email } = req.body;
+  subscribeToNewsletter(email);
+  res.json({ success: true });
+});
+
+// In crypto payment route
+app.post('/api/payment/crypto', (req, res) => {
+  const address = 'your-anonymous-btc-address'; // Add your wallet here
+  res.json({ address, amount: req.body.amount });
+});
+
+// POST /api/webhook-test
+app.post('/api/webhook-test', (req, res) => {
+  console.log('Webhook received:', req.body);
+  res.sendStatus(200);
+});
+
+// GET /api/oauth/simulate
+app.get('/api/oauth/simulate', (req, res) => {
+  res.json({ token: 'fake-oauth-token' });
 });
 
 export { router as registerRoutes };

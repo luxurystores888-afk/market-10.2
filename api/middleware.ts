@@ -1,5 +1,6 @@
 import rateLimit from 'express-rate-limit';
 import { Request, Response, NextFunction } from 'express';
+import validator from 'validator';
 
 // Rate limiting middleware
 export const apiLimiter = rateLimit({
@@ -12,6 +13,7 @@ export const apiLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
   // Trust proxy configured at app level
+  keyGenerator: (req) => req.user ? req.user.id : req.ip
 });
 
 export const strictApiLimiter = rateLimit({
@@ -25,6 +27,18 @@ export const strictApiLimiter = rateLimit({
   legacyHeaders: false,
   // Trust proxy configured at app level
 });
+
+// Add middleware
+app.use((req, res, next) => {
+  if (req.body) {
+    for (let key in req.body) {
+      if (typeof req.body[key] === 'string') req.body[key] = validator.escape(req.body[key]);
+    }
+  }
+  next();
+});
+
+// app.use(compression());
 
 // Security middleware to sanitize error responses
 export const errorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
@@ -89,3 +103,8 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction) =
   console.log(`[${timestamp}] ${method} ${url} - IP: ${ip} - User-Agent: ${userAgent}`);
   next();
 };
+
+// In routes
+try { // main
+} catch { // fallback response
+}

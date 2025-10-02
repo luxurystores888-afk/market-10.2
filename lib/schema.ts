@@ -28,7 +28,7 @@ export const products = pgTable("products", {
   imageUrl: text("image_url"),
   stock: integer("stock").default(0),
   status: varchar("status", { length: 20 }).default("active"),
-  tags: jsonb("tags"),
+  tags: text("tags").array(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -511,3 +511,6 @@ export const restockSubscriptions = pgTable('restock_subscriptions', {
 
 export type RestockSubscription = typeof restockSubscriptions.$inferSelect;
 export type InsertRestockSubscription = typeof restockSubscriptions.$inferInsert;
+
+// Example query with join
+// db.select().from(products).leftJoin(orders, eq(products.id, orders.productId));

@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     
     <!-- 🚀 PWA AND PERFORMANCE META TAGS -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta name="theme-color" content="#00D4FF" />
     <meta name="background-color" content="#000000" />
     <meta name="msapplication-TileColor" content="#00D4FF" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="CYBER MART 2077" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="format-detection" content="telephone=no" />
@@ -110,6 +110,21 @@
     
     <!-- 🧠 WebAssembly Preload -->
     <link rel="preload" href="/wasm/cyberpunk-engine.wasm" as="fetch" type="application/wasm" crossorigin />
+
+    <script type="text/javascript">
+      (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "replace-with-your-clarity-project-id");
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YOURID"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YOURID');
+    </script>
   </head>
   
   <body>

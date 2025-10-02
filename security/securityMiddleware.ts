@@ -3,7 +3,7 @@
 
 import { Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
-import { InfiniteSecuritySystem } from './infiniteSecuritySystem';
+import { InfiniteSecuritySystem } from './infiniteSecuritySystem.js';
 
 // Initialize security system
 const securitySystem = new InfiniteSecuritySystem();

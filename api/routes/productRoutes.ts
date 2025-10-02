@@ -1,5 +1,5 @@
 import express from 'express';
-import { storage } from '../storage';
+import { storage } from '../storage.ts';
 import { 
   validateQuery, 
   validateParams, 
@@ -8,11 +8,11 @@ import {
   productIdSchema,
   createProductSchema,
   updateProductSchema
-} from '../validation';
-import { apiLimiter, strictApiLimiter } from '../middleware';
-import { requireAdmin, optionalAuth } from '../middleware/auth';
-import { aiService } from '../aiService'; // Added import for aiService
-import { webpush } from '../webpush'; // Added import for webpush
+} from '../validation.ts';
+import { apiLimiter, strictApiLimiter } from '../middleware.ts';
+import { requireAdmin, optionalAuth } from '../middleware/auth.ts';
+import { aiService } from '../services/aiService.ts'; // Added import for aiService
+import { webpush } from '../web3.ts'; // Added import for webpush
 
 export const productRoutes = express.Router();
 

@@ -2,6 +2,16 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { QuickShareButtons } from '../components/QuickShareButtons';
 import { PriceDropAlert } from '../components/PriceDropAlert';
+import { Helmet } from 'react-helmet';
+import ProductCard from '../components/ProductCard';
+import { ThreeDShowcase } from '../components/ThreeDShowcase';
+import { VoiceControl } from '../components/VoiceControl';
+import { LiveStream } from '../components/LiveStream';
+import { SentimentAnalysis } from '../components/SentimentAnalysis';
+import { NFTMarketplace } from '../components/NFTMarketplace';
+import { EyeTracking } from '../components/EyeTracking';
+import { MultiModalInput } from '../components/MultiModalInput';
+import { BCICompatibility } from '../components/BCICompatibility';
 
 interface Product {
   id: string;
@@ -20,6 +30,7 @@ export default function ProductDetails() {
   const [loading, setLoading] = useState(true);
   const [threshold, setThreshold] = useState<string>('');
   const [watchlisted, setWatchlisted] = useState<boolean>(false);
+  const [recommendations, setRecommendations] = useState([]);
 
   useEffect(() => {
     if (!id) return;
@@ -37,6 +48,14 @@ export default function ProductDetails() {
     const saved = localStorage.getItem(`price_threshold_${id}`);
     if (saved) setThreshold(saved);
   }, [id]);
+
+  useEffect(() => {
+    if (product) {
+      fetch(`/api/recommendations/${product.id}`)
+        .then(res => res.json())
+        .then(setRecommendations);
+    }
+  }, [product]);
 
   const numericPrice = useMemo(() => {
     if (!product) return 0;
@@ -83,6 +102,17 @@ export default function ProductDetails() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-cyan-900/20 text-white p-6">
+
+      {/* Add Helmet at the top of the return */}
+      <Helmet>
+        <title>{product.name} - Cyber Mart 2077</title>
+        <meta name="description" content={product.description} />
+        <meta property="og:title" content={product.name} />
+        <meta property="og:description" content={product.description} />
+        <meta property="og:image" content={product.imageUrl} />
+        <meta property="og:url" content={`http://yourdomain.com/product/${product.id}`} />
+      </Helmet>
+
       <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
           <img src={product.imageUrl || '/icon-512x512.png'} alt={product.name} className="w-full rounded-xl border border-cyan-500/30" />
@@ -116,8 +146,25 @@ export default function ProductDetails() {
 
           <PriceDropAlert productId={product.id} productName={product.name} />
           <QuickShareButtons productName={product.name} productUrl={window.location.href} />
+
+          <div className="mt-8">
+            <h2>Recommended Products</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {recommendations.map(rec => (
+                <ProductCard key={rec.id} product={rec} />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
+      <ThreeDShowcase />
+      <VoiceControl />
+      <LiveStream />
+      <SentimentAnalysis text="Sample review text" />
+      <NFTMarketplace />
+      <EyeTracking />
+      <MultiModalInput />
+      <BCICompatibility />
     </div>
   );
 }

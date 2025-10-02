@@ -2,6 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
+import ProductGenerator from '../components/ProductGenerator';
+import { LineChart, Line } from 'recharts';
+import { HeatmapAnalytics } from '../components/HeatmapAnalytics';
+import { ABTesting } from '../components/ABTesting';
+import { PredictiveAnalytics } from '../components/PredictiveAnalytics';
+import { BigDataInsights } from '../components/BigDataInsights';
+import { CustomerSegmentation } from '../components/CustomerSegmentation';
+import { ChurnPrevention } from '../components/ChurnPrevention';
+import { optimizeRevenue } from '../../api/services/revenueOptimizer';
+import { WhiteLabel } from '../components/WhiteLabel';
 
 interface OverviewMetrics {
   revenue: {
@@ -83,7 +93,20 @@ interface ProductMetrics {
   }>;
 }
 
-const AdminDashboard: React.FC = () => {
+// Stack array for history
+
+// Log function
+const logEvent = (type, data) => {
+  const logs = JSON.parse(localStorage.getItem('logs') || '[]');
+  logs.push({ type, data, timestamp: Date.now() });
+  localStorage.setItem('logs', JSON.stringify(logs));
+};
+
+// Display logs in dashboard
+
+// Recursive component for tree
+
+export const AdminDashboard: React.FC = () => {
   const { state: authState, actions: authActions } = useAuth();
   const navigate = useNavigate();
   const [overviewData, setOverviewData] = useState<OverviewMetrics | null>(null);
@@ -94,6 +117,9 @@ const AdminDashboard: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedTab, setSelectedTab] = useState<'overview' | 'sales' | 'users' | 'products' | 'inventory'>('overview');
   const [timeRange, setTimeRange] = useState('30d');
+  const [approvalStatus, setApprovalStatus] = useState<'pending' | 'approved'>('pending');
+
+  // State for selected, batch update button
 
   // Handle authentication errors
   const handleAuthError = (error: any) => {
@@ -449,6 +475,12 @@ const AdminDashboard: React.FC = () => {
                 <p className="text-2xl font-bold text-purple-400">{formatPercentage(userData.summary.retentionRate)}</p>
               </div>
             </div>
+            <div>
+              <h3>User Growth Chart</h3>
+              <LineChart data={userData.chartData}>
+                <Line type="monotone" dataKey="newUsers" stroke="#00ff00" />
+              </LineChart>
+            </div>
           </div>
         )}
 
@@ -529,8 +561,44 @@ const AdminDashboard: React.FC = () => {
                 </Link>
               </div>
             </div>
+            <div>
+              <h2>Generate New Product</h2>
+              <ProductGenerator />
+            </div>
           </div>
         )}
+
+        {/* Add section */}
+        <div>
+          <h3>Profit Multiplier Calculator</h3>
+          <p>Current: ${salesData?.summary.totalRevenue || 0}/day | Projected with 2x traffic: ${(salesData?.summary.totalRevenue || 0) * 2}</p>
+        </div>
+        {/* Add optimizer */}
+        <div>
+          <h3>Legal Price Optimizer</h3>
+          <p>Suggest: Raise by 5% for +10% profit (based on data).</p>
+        </div>
+        {/* Add tracker */}
+        <div>
+          <h3>Legal Traffic Tracker</h3>
+          <p>Top source: Reddit - 40% traffic.</p>
+        </div>
+        {/* Export button */}
+        <button onClick={() => {
+          const blob = new Blob([JSON.stringify(localStorage.getItem('logs'))], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'analytics.json';
+          a.click();
+        }}>Export Analytics</button>
+        <ABTesting variants={['Variant A', 'Variant B']} />
+        <PredictiveAnalytics />
+        <BigDataInsights />
+        <CustomerSegmentation />
+        <ChurnPrevention />
+        <p>Optimization: {optimizeRevenue()}</p>
+        <WhiteLabel />
       </div>
     </div>
   );

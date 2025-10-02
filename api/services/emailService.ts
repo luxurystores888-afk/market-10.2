@@ -1,4 +1,6 @@
 import nodemailer from 'nodemailer';
+import { db } from '../db';
+import { subscribers } from '../db/schema';
 
 let transporter: nodemailer.Transporter | null = null;
 
@@ -31,5 +33,26 @@ export async function sendEmail(opts: { to: string; subject: string; html: strin
     html: opts.html
   });
 }
+
+// Add newsletter functions
+async function subscribeToNewsletter(email) {
+  // Save to DB
+  await db.insert(subscribers).values({ email });
+}
+
+async function sendNewsletter(subject, html) {
+  const subscribers = await db.select().from(subscribers);
+  for (const sub of subscribers) {
+    await sendEmail({ to: sub.email, subject, html });
+  }
+}
+
+// Add function
+async function sendUpsellEmail(to, products) {
+  const html = `<h1>Thanks for your purchase! Add these for more savings: ${products.join(', ')}</h1>`;
+  await sendEmail({ to, subject: 'Don't Miss These Add-Ons', html });
+}
+
+export { subscribeToNewsletter, sendNewsletter };
 
 

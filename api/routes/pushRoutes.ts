@@ -52,6 +52,14 @@ router.post('/notify-test', authenticate, async (req, res) => {
   }
 });
 
+// Add function
+async function sendPersonalPush(userId, message) {
+  const subs = await db.select().from(pushSubscriptions).where(eq(pushSubscriptions.userId, userId));
+  for (const s of subs) {
+    webpush.sendNotification(s, JSON.stringify({ title: 'Exclusive Deal', body: message }));
+  }
+}
+
 export default router;
 
 

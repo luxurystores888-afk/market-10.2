@@ -18,11 +18,11 @@ import {
   forumReplies, type ForumReply, type InsertForumReply,
   productReviews, type ProductReview, type InsertProductReview,
   restockSubscriptions, type RestockSubscription, type InsertRestockSubscription
-} from "../lib/schema";
+} from "../lib/schema.ts";
 import { randomUUID } from "node:crypto";
-import { db } from "./db";
+import { db } from "./db.ts";
 import { eq, and, like, gte, lte, desc, asc, sql, count, inArray, isNull, or, gt } from "drizzle-orm";
-import { DatabasePerformanceTracker } from "./middleware/performanceMonitoring";
+import { DatabasePerformanceTracker } from "./middleware/performanceMonitoring.ts";
 
 export interface IStorage {
   // User operations

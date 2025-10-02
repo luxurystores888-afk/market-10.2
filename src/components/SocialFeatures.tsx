@@ -332,6 +332,9 @@ export function SocialFeatures() {
     return `${Math.floor(hours / 24)}d ago`;
   };
 
+  // Add AI curation
+  const curatedFeed = useAIForCuration(posts);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-purple-900 text-white p-4">
       <div className="max-w-7xl mx-auto">

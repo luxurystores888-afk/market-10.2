@@ -52,6 +52,14 @@ const BlogPage = lazy(() => import('./pages/BlogPage'));
 const PersonalMicrosite = lazy(() => import('./pages/PersonalMicrosite'));
 const ProductDetails = lazy(() => import('./pages/ProductDetails'));
 
+import * as Sentry from '@sentry/react';
+
+Sentry.init({
+  dsn: 'https://your-sentry-dsn@your-self-hosted-sentry/instance', // Set up free self-hosted Sentry
+  integrations: [Sentry.browserTracingIntegration()],
+  tracesSampleRate: 1.0,
+});
+
 function App() {
   const [isChatOpen, setIsChatOpen] = useState(false);
 

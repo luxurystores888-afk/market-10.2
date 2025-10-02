@@ -1,11 +1,11 @@
 import express from 'express';
-import { aiProductGenerator, multiAI, type ProductGenerationRequest } from '../services/aiProductGenerator';
-import { aiShoppingAssistant } from '../services/aiShoppingAssistant';
-import { geminiAI } from '../services/geminiAI';
+import { aiProductGenerator, multiAI, type ProductGenerationRequest } from '../services/aiProductGenerator.ts';
+import { aiShoppingAssistant } from '../services/aiShoppingAssistant.ts';
+import { geminiAI } from '../services/geminiAI.ts';
 import type { ChatRequest, ChatResponse } from '../../lib/types';
-import { storage } from '../storage';
-import { validateBody, validateQuery } from '../validation';
-import { apiLimiter, strictApiLimiter } from '../middleware';
+import { storage } from '../storage.ts';
+import { validateBody, validateQuery } from '../validation.ts';
+import { apiLimiter, strictApiLimiter } from '../middleware.ts';
 import { z } from 'zod';
 
 // 🔐 PRIVACY: AI routes COMPLETELY DISABLED to protect development work

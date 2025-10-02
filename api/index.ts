@@ -3,14 +3,16 @@ import cors from 'cors';
 import helmet from 'helmet';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { registerRoutes } from './routes';
-import { errorHandler, securityHeaders, requestLogger } from './middleware';
-import { requireAdmin } from './middleware/auth';
-import { responseTimeTracker } from './middleware/performanceMonitoring';
-import { cyberMartRateLimit, aiProcessingLimit, ddosProtection } from './middleware/advancedRateLimit';
-import { EnhancedPersonalizationEngine } from './services/enhancedPersonalization';
-import { CyberRealtimeEngine } from './services/realtimeEngine';
-import { infiniteSecurityStack, activateInfiniteSecurity } from '../security/securityMiddleware';
+import { registerRoutes } from './routes.ts';
+import { errorHandler, securityHeaders, requestLogger } from './middleware.ts';
+import { requireAdmin } from './middleware/auth.ts';
+import { responseTimeTracker } from './middleware/performanceMonitoring.ts';
+import { cyberMartRateLimit, aiProcessingLimit, ddosProtection } from './middleware/advancedRateLimit.ts';
+import { EnhancedPersonalizationEngine } from './services/enhancedPersonalization.ts';
+import { CyberRealtimeEngine } from './services/realtimeEngine.ts';
+import { infiniteSecurityStack, activateInfiniteSecurity } from '../security/securityMiddleware.ts';
+import { gql } from 'graphql-tag';
+import { ApolloServer } from 'apollo-server-express';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -62,6 +64,19 @@ app.locals.realtimeEngine = realtimeEngine;
 
 // API routes
 app.use('/api', registerRoutes);
+
+// GraphQL Endpoint
+// Schema
+const typeDefs = gql`
+  type Query { products: [Product] }
+`;
+
+// Resolvers
+const resolvers = { Query: { products: () => [] } };
+
+// Server
+const apollo = new ApolloServer({ typeDefs, resolvers });
+apollo.applyMiddleware({ app });
 
 // Error handling middleware (must be last)
 app.use(errorHandler);

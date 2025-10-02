@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { db } from './db';
+import { db } from './db.ts';
 import { web3Wallets, cryptoTransactions, nftTokens, ipfsFiles } from '../lib/schema';
 import { eq, and } from 'drizzle-orm';
 

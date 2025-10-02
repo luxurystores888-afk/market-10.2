@@ -12,6 +12,7 @@
   "dir": "ltr",
   "scope": "/",
   "icons": [
+    { "src": "icon-128.png", "sizes": "128x128" },
     {
       "src": "/icon-192x192.png",
       "sizes": "192x192",
@@ -30,29 +31,11 @@
       "type": "image/png"
     }
   ],
-  "shortcuts": [
-    {
-      "name": "AI Product Generator",
-      "short_name": "AI Generator",
-      "description": "Generate cyberpunk products with AI",
-      "url": "/?shortcut=ai-generator",
-      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "3D Holographic View",
-      "short_name": "3D View", 
-      "description": "Browse products in 3D holographic displays",
-      "url": "/?shortcut=3d-view",
-      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "NEXUS-7 AI Assistant",
-      "short_name": "AI Assistant",
-      "description": "Chat with your cyberpunk shopping assistant",
-      "url": "/?shortcut=ai-chat",
-      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
-    }
-  ],
+  "shortcuts": [{
+    "name": "Home",
+    "url": "/",
+    "description": "Homepage"
+  }],
   "screenshots": [
     {
       "src": "/screenshot-wide.png",

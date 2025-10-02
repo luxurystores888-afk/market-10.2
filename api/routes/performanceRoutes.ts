@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { performanceMonitor, DatabasePerformanceTracker } from '../middleware/performanceMonitoring';
-import { apiLimiter } from '../middleware';
-import { requireAdmin } from '../middleware/auth';
+import { performanceMonitor, DatabasePerformanceTracker } from '../middleware/performanceMonitoring.ts';
+import { apiLimiter } from '../middleware/index.ts';
+import { requireAdmin } from '../middleware/auth.ts';
 
 const performanceRoutes = Router();
 

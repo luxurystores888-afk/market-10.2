@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingCart, User, Search, Menu, Zap, Wallet, X } from 'lucide-react';
+import { ShoppingCart, User, Search, Menu, Zap, Wallet, X, Moon, Sun } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { WalletConnect } from './WalletConnect';
@@ -14,6 +14,7 @@ export function Header() {
   const [showWalletModal, setShowWalletModal] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const navigate = useNavigate();
+  const [isDarkMode, setIsDarkMode] = useState(() => document.documentElement.classList.contains('dark'));
 
   // Check if user is admin
   const isAdmin = authState.isAuthenticated && authState.user?.role === 'admin';
@@ -33,6 +34,14 @@ export function Header() {
   const closeMobileMenu = () => {
     setShowMobileMenu(false);
   };
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -111,6 +120,12 @@ export function Header() {
             <Link to="/gallery" className="text-gray-300 hover:text-cyan-400 transition-colors">
               Gallery
             </Link>
+            <button 
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className="text-gray-300 hover:text-cyan-400 transition-colors"
+            >
+              {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </button>
           </nav>
 
           {/* Search Bar */}

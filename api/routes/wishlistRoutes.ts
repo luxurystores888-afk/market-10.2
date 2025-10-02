@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { storage } from '../storage';
-import { authenticate } from '../middleware/auth';
+import { storage } from '../storage.ts';
+import { authenticate } from '../middleware/auth.ts';
 
 const router = Router();
 

@@ -1,6 +1,6 @@
 import express from 'express';
-import { requireAdmin, authenticate } from '../middleware/auth';
-import { storage } from '../storage';
+import { requireAdmin, authenticate } from '../middleware/auth.ts';
+import { storage } from '../storage.ts';
 
 // Define types for analytics data
 interface OrderAnalytics {

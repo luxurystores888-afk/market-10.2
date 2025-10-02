@@ -1,3 +1,18 @@
+import { precacheAndRoute } from 'workbox-precaching';
+import { registerRoute } from 'workbox-routing';
+import { StaleWhileRevalidate } from 'workbox-strategies';
+
+// Precache manifest (generate via build)
+precacheAndRoute(self.__WB_MANIFEST);
+
+// Cache product pages
+registerRoute(
+  ({url}) => url.pathname.startsWith('/product/'),
+  new StaleWhileRevalidate({
+    cacheName: 'product-cache',
+  })
+);
+
 // 🚀 CYBERPUNK SERVICE WORKER - REALITY TRANSCENDING CACHING
 const CACHE_VERSION = 'v1.2.0';
 const CACHE_NAME = `cyberpunk-omniplex-${CACHE_VERSION}`;
@@ -43,6 +58,20 @@ self.addEventListener('install', event => {
     ]).then(() => {
       console.log('✅ Cyberpunk Service Worker installed');
       self.skipWaiting(); // Activate immediately
+    })
+  );
+});
+
+// Add caching for more assets
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open('v1').then(cache => {
+      return cache.addAll([
+        '/',
+        '/index.html',
+        '/styles/main.css', // Adjust paths
+        '/scripts/main.js'
+      ]);
     })
   );
 });

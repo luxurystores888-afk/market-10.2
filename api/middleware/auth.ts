@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { verifyJWT } from '../routes/authRoutes';
-import { storage } from '../storage';
+import { verifyJWT } from '../routes/authRoutes.ts';
+import { storage } from '../storage.ts';
 import type { User } from '../../lib/schema';
 
 // Extend Express Request type to include user
