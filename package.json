@@ -15,6 +15,9 @@
     "automation:stop": "curl -X POST http://localhost:3001/api/automation/stop",
     "automation:status": "curl http://localhost:3001/api/automation/status",
     "dev:all": "concurrently \"npm run dev:server\" \"npm run dev\"",
+    "security-test": "node scripts/security-test.js",
+    "bug-detection": "node scripts/bug-detection.js",
+    "activate-maximum-profit": "curl -X POST http://localhost:3001/api/activate-maximum-profit",
     "lint": "eslint . --ext .ts,.tsx"
   },
   "dependencies": {

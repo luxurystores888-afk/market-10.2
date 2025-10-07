@@ -52,6 +52,11 @@ const BlogPage = lazy(() => import('./pages/BlogPage'));
 const PersonalMicrosite = lazy(() => import('./pages/PersonalMicrosite'));
 const ProductDetails = lazy(() => import('./pages/ProductDetails'));
 const AffiliatePage = lazy(() => import('./components/AffiliateMarketing').then(m => ({ default: m.AffiliateMarketing })));
+const MaximumProfitDashboard = lazy(() => import('./components/MaximumProfitDashboard').then(m => ({ default: m.MaximumProfitDashboard })));
+const RealRevenueDashboard = lazy(() => import('./components/RealRevenueDashboard').then(m => ({ default: m.RealRevenueDashboard })));
+const InfiniteProfitDashboard = lazy(() => import('./components/InfiniteProfitDashboard').then(m => ({ default: m.InfiniteProfitDashboard })));
+const RealWorkingDashboard = lazy(() => import('./components/RealWorkingDashboard').then(m => ({ default: m.RealWorkingDashboard })));
+const FirstDayProfitDashboard = lazy(() => import('./components/FirstDayProfitDashboard').then(m => ({ default: m.FirstDayProfitDashboard })));
 
 import * as Sentry from '@sentry/react';
 
@@ -123,6 +128,11 @@ function App() {
                 <Route path="/microsite/:userId" element={<PersonalMicrosite />} />
                 <Route path="/product/:productId" element={<ProductDetails />} />
                 <Route path="/affiliate" element={<AffiliatePage />} />
+              <Route path="/maximum-profit" element={<MaximumProfitDashboard />} />
+              <Route path="/real-revenue" element={<RealRevenueDashboard />} />
+              <Route path="/infinite-profit" element={<InfiniteProfitDashboard />} />
+              <Route path="/real-working" element={<RealWorkingDashboard />} />
+              <Route path="/first-day-profit" element={<FirstDayProfitDashboard />} />
               </Routes>
             </Suspense>
             
