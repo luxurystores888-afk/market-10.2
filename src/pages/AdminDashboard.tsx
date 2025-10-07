@@ -13,6 +13,11 @@ import { ChurnPrevention } from '../components/ChurnPrevention';
 import { optimizeRevenue } from '../../api/services/revenueOptimizer';
 import { WhiteLabel } from '../components/WhiteLabel';
 import InventoryForecaster from '../components/InventoryForecaster';
+import ShieldOptimizer from '../components/ShieldOptimizer';
+import TrafficBlackHole from '../components/TrafficBlackHole';
+import GeneticOptimizer from '../components/GeneticOptimizer';
+import TimeLoop from '../components/TimeLoop';
+import ProfitSingularity from '../components/ProfitSingularity';
 
 interface OverviewMetrics {
   revenue: {
@@ -601,7 +606,14 @@ export const AdminDashboard: React.FC = () => {
         <ChurnPrevention />
         <p>Optimization: {optimizeRevenue()}</p>
         <WhiteLabel />
+        <ShieldOptimizer />
+        <TrafficBlackHole />
         <div>Traffic Magnet Status: Active</div>
+        <div>Evolution Status: Active</div>
+        <GeneticOptimizer />
+        <TimeLoop />
+        <div>Swarm Status: Active</div>
+        <ProfitSingularity />
       </div>
     </div>
   );

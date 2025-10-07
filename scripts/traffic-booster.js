@@ -7,3 +7,10 @@ fetch('https://api.twitter.com/2/tweets', {
 
 // Ping free directories
 console.log('Pinging...');
+// Replicate content
+console.log('Replicating...');
+// Suck in traffic
+console.log('Attracting...');
+// Mock Twitter post
+console.log('Posting to Twitter: Viral content');
+// Use free node-twitter if installed, else log

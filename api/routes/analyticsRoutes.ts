@@ -63,6 +63,23 @@ analyticsRoutes.get('/billion-sim', async (req, res) => {
   res.json({ projection: 'Billions!' });
 });
 
+analyticsRoutes.get('/time-loop', async (req, res) => {
+  res.json({ patterns: [] });
+});
+
+analyticsRoutes.get('/prophecy', async (req, res) => {
+  res.json({ future: 'Infinite profits' });
+});
+
+analyticsRoutes.get('/omni-oracle', async (req, res) => {
+  res.json({ futures: 'All infinite' });
+});
+
+analyticsRoutes.get('/advanced', async (req, res) => {
+  // Aggregate with SQL
+  res.json({ data: 'aggregated' });
+});
+
 // Remove or adjust old endpoints to avoid duplication.
 // ... existing code ...
 

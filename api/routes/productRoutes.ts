@@ -14,6 +14,12 @@ import { requireAdmin, optionalAuth } from '../middleware/auth.ts';
 import { aiService } from '../services/aiService.ts'; // Added import for aiService
 import { webpush } from '../web3.ts'; // Added import for webpush
 
+// Use cluster module (free in Node.js)
+const cluster = require('cluster');
+if (cluster.isMaster) {
+  cluster.fork();
+}
+
 export const productRoutes = express.Router();
 
 // Get all products with optional filtering

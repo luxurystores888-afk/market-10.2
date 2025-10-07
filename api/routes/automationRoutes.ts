@@ -437,4 +437,8 @@ router.post('/ultimate-maximization', async (req, res) => {
   }
 });
 
+router.get('/singularity', async (req, res) => {
+  res.json({ profit: 'Infinite' });
+});
+
 export default router;

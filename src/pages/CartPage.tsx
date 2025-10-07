@@ -7,6 +7,7 @@ import { formatPrice, parsePrice } from '../utils/price';
 import { CryptoCheckout } from '../components/CryptoCheckout';
 import UpsellSuggestions from '../components/UpsellSuggestions';
 import MindUpsell from '../components/MindUpsell';
+import VortexEnroller from '../components/VortexEnroller';
 
 export function CartPage() {
   const { items, updateQuantity, removeFromCart, clearCart, totalPrice, totalItems } = useCart();
@@ -272,6 +273,7 @@ export function CartPage() {
       />
       <UpsellSuggestions cartItems={items} />
       <MindUpsell />
+      <VortexEnroller />
     </div>
   );
 }

@@ -3,9 +3,16 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 import wasm from "vite-plugin-wasm";
 import topLevelAwait from "vite-plugin-top-level-await";
+import compression from 'vite-plugin-compression';
+import { VitePWA } from 'vite-plugin-pwa';
+import esbuild from 'esbuild';
+import optimize from 'vite-plugin-optimize';
 
 export default defineConfig({
-  plugins: [react(), wasm(), topLevelAwait()],
+  plugins: [react(), VitePWA({
+    registerType: 'autoUpdate',
+    devOptions: { enabled: true }
+  }), optimize(), wasm(), topLevelAwait(), compression({ level: 9 })],
   root: ".",
   resolve: {
     alias: {
@@ -46,7 +53,8 @@ export default defineConfig({
         chunkFileNames: '[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash][extname]'
       }
-    }
+    },
+    minify: 'esbuild'
   },
   publicDir: "./public",
   server: {
@@ -69,5 +77,7 @@ export default defineConfig({
     host: "0.0.0.0",
     port: 5000,
   },
-  optimizeDeps: { include: ['@assemblyscript/loader'] }
+  optimizeDeps: {
+    esbuildOptions: { loader: { '.js': 'jsx' } }
+  }
 });

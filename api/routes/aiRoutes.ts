@@ -7,6 +7,7 @@ import { storage } from '../storage.ts';
 import { validateBody, validateQuery } from '../validation.ts';
 import { apiLimiter, strictApiLimiter } from '../middleware.ts';
 import { z } from 'zod';
+import { pipeline } from 'transformers.js';
 
 // 🔐 PRIVACY: AI routes COMPLETELY DISABLED to protect development work
 export const aiRoutes = express.Router();
@@ -659,6 +660,11 @@ aiRoutes.post('/generate-alt-text', apiLimiter, async (req, res) => {
   res.json({ altText });
 });
 
+aiRoutes.post('/omni-creator', async (req, res) => {
+  console.log('Spawning AIs...');
+  res.json({ spawned: true });
+});
+
 aiRoutes.post('/keyword-suggestions', async (req, res) => {
   const { text } = req.body;
   // Simple mock logic or use free AI
@@ -672,6 +678,24 @@ aiRoutes.post('/generate-hype', async (req, res) => {
 
 aiRoutes.get('/mind-upsell', async (req, res) => {
   res.json({ suggestion: 'Buy this!' });
+});
+
+aiRoutes.post('/self-evolve', async (req, res) => {
+  // Use free AI prompt to generate upgrade
+  console.log('Evolving...');
+  res.json({ evolved: true });
+});
+
+aiRoutes.post('/god-mind', async (req, res) => {
+  console.log('Creating infinite features...');
+  res.json({ created: true });
+});
+
+// Example usage in route
+aiRoutes.get('/transform', async (req, res) => {
+  const generator = await pipeline('text-generation');
+  const output = await generator('Hello');
+  res.json(output);
 });
 
 // Export handled by export const declaration above

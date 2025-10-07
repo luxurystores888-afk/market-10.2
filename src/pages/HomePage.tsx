@@ -19,6 +19,7 @@ import { Scene, PerspectiveCamera, WebGLRenderer, BufferGeometry, Float32BufferA
 import HypeGenerator from '../components/HypeGenerator';
 import LoopEnroller from '../components/LoopEnroller';
 import ViralMultiplier from '../components/ViralMultiplier';
+import { useTranslation } from 'react-i18next';
 
 // Lazy load AI components
 const MultiAIStatus = lazy(() => import('../components/MultiAIStatus'));
@@ -466,6 +467,8 @@ export function HomePage() {
   }, []);
 
   // <p>Eternal Pattern: {pattern}</p>
+
+  const { t } = useTranslation();
 
   return (
     <AdaptiveDesign>

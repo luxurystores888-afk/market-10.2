@@ -19,6 +19,8 @@ import { computeAdd } from '../wasm-modules/compute';
 import { ONNXModel } from '../components/ONNXModel';
 import { EventTracking } from '../components/EventTracking';
 import LightningAuction from '../components/LightningAuction';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, Box } from '@pmndrs/drei';
 
 // Example usage: const total = computeAdd(price, tax);
 
