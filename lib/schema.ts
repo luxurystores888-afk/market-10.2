@@ -510,6 +510,14 @@ export const restockSubscriptions = pgTable('restock_subscriptions', {
 export type RestockSubscription = typeof restockSubscriptions.$inferSelect;
 export type InsertRestockSubscription = typeof restockSubscriptions.$inferInsert;
 
+export const features = pgTable('features', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull(),
+  description: text('description'),
+  profitBoost: decimal('profit_boost', { precision: 30, scale: 0 }), // For huge numbers
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
 // Example query with join
 // db.select().from(products).leftJoin(orders, eq(products.id, orders.productId));
 
