@@ -206,4 +206,5 @@ const server = app.listen(port, '0.0.0.0', () => {
   console.log('🚀 PULSE - ULTIMATE AI-POWERED PLATFORM!');
   console.log(`📱 Server running on http://0.0.0.0:${port}`);
   console.log(`🔗 API available at http://0.0.0.0:${port}/api`);
-  console.log(`
+  console.log(`🤖 AI systems online! Ready for billion-dollar launch!`);
+});

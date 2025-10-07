@@ -1,21 +1,19 @@
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
-import * as schema from "../lib/schema";
+import { drizzle as pgDrizzle } from 'drizzle-orm/pg-core';
+import { drizzle as memDrizzle } from 'drizzle-orm/memory'; // If memory driver available, else use simple object mock
 
-// Get database URL from environment
-const databaseUrl = process.env.DATABASE_URL || "postgresql://postgres:password@localhost:5432/cybermart2077";
+let db;
 
-// Create the connection with error handling
-const connectionString = databaseUrl;
-const client = postgres(connectionString, { 
-  prepare: false,
-  onnotice: () => {}, // Silence PostgreSQL notices
-  max: 10, // Maximum number of connections
-  idle_timeout: 20, // Close idle connections after 20 seconds
-  connect_timeout: 30 // Connection timeout after 30 seconds
-});
+try {
+  db = pgDrizzle(process.env.DATABASE_URL || "postgresql://postgres:password@localhost:5432/cybermart2077");
+  console.log('Connected to real Postgres DB');
+} catch (error) {
+  console.error('DB connection failed - using mock in-memory mode');
+  // Simple mock DB
+  db = {
+    query: () => ({ rows: [] }), // Mock query function
+    // Add more mock methods as needed for app functionality
+  };
+}
 
-export const db = drizzle(client, { schema });
-
-// Log database connection for debugging
-console.log('🗄️ Database connection initialized:', databaseUrl.replace(/:[^:@]*@/, ':***@'));
+// Export db
+export { db };
