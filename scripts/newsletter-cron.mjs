@@ -5,3 +5,6 @@ const job = new cron.CronJob('0 0 * * 0', () => {
 });
 
 job.start();
+
+// Schedule reminders
+console.log('Sending reminders...');

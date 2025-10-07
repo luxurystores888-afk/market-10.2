@@ -16,6 +16,9 @@ import { ParticleEffects } from '../components/ParticleEffects';
 import { CommunityContent } from '../components/CommunityContent';
 import { EnterpriseSolutions } from '../components/EnterpriseSolutions';
 import { Scene, PerspectiveCamera, WebGLRenderer, BufferGeometry, Float32BufferAttribute, PointsMaterial, Points, MathUtils } from 'three';
+import HypeGenerator from '../components/HypeGenerator';
+import LoopEnroller from '../components/LoopEnroller';
+import ViralMultiplier from '../components/ViralMultiplier';
 
 // Lazy load AI components
 const MultiAIStatus = lazy(() => import('../components/MultiAIStatus'));
@@ -782,6 +785,9 @@ export function HomePage() {
       <section className="mt-8">
         <PowerfulOfSpreader />
       </section>
+      <HypeGenerator />
+      <LoopEnroller />
+      <ViralMultiplier />
     </AdaptiveDesign>
   );
 }

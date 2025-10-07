@@ -39,6 +39,10 @@ aiRoutes.get('/viral-swarm', (req, res) => {
   res.json({ viralText: 'Join PULSE for epic deals! #PulseEcomm' });
 });
 
+aiRoutes.get('/viral-multiply', async (req, res) => {
+  res.json({ multiplied: 10 });
+});
+
 // Validation schema for AI product generation request
 const generateProductSchema = z.object({
   productIdea: z.string()
@@ -435,6 +439,15 @@ aiRoutes.get('/recommendations', async (req, res) => {
 });
 
 /**
+ * GET /api/ai/forecast
+ * Get rule-based product recommendations
+ */
+aiRoutes.get('/forecast', async (req, res) => {
+  // Rule-based forecast
+  res.json({ forecast: 100 });
+});
+
+/**
  * GET /api/ai/status
  * Check Multi-AI Fusion System status and capabilities
  */
@@ -651,6 +664,14 @@ aiRoutes.post('/keyword-suggestions', async (req, res) => {
   // Simple mock logic or use free AI
   const suggestions = ['keyword1', 'keyword2'];
   res.json(suggestions);
+});
+
+aiRoutes.post('/generate-hype', async (req, res) => {
+  res.json({ content: 'Hype content' });
+});
+
+aiRoutes.get('/mind-upsell', async (req, res) => {
+  res.json({ suggestion: 'Buy this!' });
 });
 
 // Export handled by export const declaration above

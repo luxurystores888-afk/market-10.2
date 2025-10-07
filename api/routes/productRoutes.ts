@@ -124,6 +124,10 @@ productRoutes.post('/reviews', optionalAuth, async (req, res) => {
   res.json(review);
 });
 
+productRoutes.post('/auction', async (req, res) => {
+  res.json({ auctionId: 'new' });
+});
+
 productRoutes.get('/affiliate/:id', optionalAuth, async (req, res) => {
   const affiliateUrl = `${window.location.origin}/product/${req.params.id}?aff=${req.user.id}`;
   res.json({ url: affiliateUrl });

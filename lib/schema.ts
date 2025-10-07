@@ -530,3 +530,31 @@ export const reviews = pgTable('reviews', {
   content: text('content'),
   createdAt: timestamp('created_at').defaultNow(),
 });
+
+export const affiliateNetwork = pgTable('affiliate_network', {
+  id: serial('id').primaryKey(),
+  userId: text('user_id').references(() => users.id),
+  inviteeId: text('invitee_id').references(() => users.id),
+});
+
+export const giveawayEntries = pgTable('giveaway_entries', {
+  id: serial('id').primaryKey(),
+  userId: text('user_id').references(() => users.id),
+});
+
+export const trafficMagnets = pgTable('traffic_magnets', {
+  id: serial('id').primaryKey(),
+  pingTime: timestamp('ping_time'),
+});
+
+export const subscriptions = pgTable('subscriptions', {
+  id: serial('id').primaryKey(),
+  userId: text('user_id').references(() => users.id),
+  status: text('status'),
+});
+
+export const multipliers = pgTable('multipliers', {
+  id: serial('id').primaryKey(),
+  userId: text('user_id').references(() => users.id),
+  factor: integer('factor'),
+});

@@ -3,6 +3,7 @@ import { RacingGame } from '../components/RacingGame';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Gamepad2, Car, ShoppingBag, Trophy, Zap, Star } from 'lucide-react';
+import GiveawayEntry from '../components/GiveawayEntry';
 
 type GameMode = 'menu' | 'racing' | 'showroom' | 'shopping';
 
@@ -197,6 +198,7 @@ export const GamingPage: React.FC = () => {
       )}
       
       {renderContent()}
+      <GiveawayEntry />
     </div>
   );
 };

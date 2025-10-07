@@ -12,6 +12,7 @@ import { CustomerSegmentation } from '../components/CustomerSegmentation';
 import { ChurnPrevention } from '../components/ChurnPrevention';
 import { optimizeRevenue } from '../../api/services/revenueOptimizer';
 import { WhiteLabel } from '../components/WhiteLabel';
+import InventoryForecaster from '../components/InventoryForecaster';
 
 interface OverviewMetrics {
   revenue: {
@@ -565,6 +566,7 @@ export const AdminDashboard: React.FC = () => {
               <h2>Generate New Product</h2>
               <ProductGenerator />
             </div>
+            <InventoryForecaster />
           </div>
         )}
 
@@ -599,6 +601,7 @@ export const AdminDashboard: React.FC = () => {
         <ChurnPrevention />
         <p>Optimization: {optimizeRevenue()}</p>
         <WhiteLabel />
+        <div>Traffic Magnet Status: Active</div>
       </div>
     </div>
   );

@@ -18,6 +18,7 @@ import { GestureControl } from '../components/GestureControl';
 import { computeAdd } from '../wasm-modules/compute';
 import { ONNXModel } from '../components/ONNXModel';
 import { EventTracking } from '../components/EventTracking';
+import LightningAuction from '../components/LightningAuction';
 
 // Example usage: const total = computeAdd(price, tax);
 
@@ -721,6 +722,7 @@ export function ProductsPage() {
       )}
       {showP2P && <P2PShopping peerId="demo" />}
       <P2PTrade />
+      <LightningAuction />
       <video ref={videoElement} style={{ display: 'none' }} />
       <div className="mt-8">
         <StoryFeed />

@@ -59,6 +59,10 @@ analyticsRoutes.get('/user-analytics', authenticate, async (req, res) => {
   res.json(userAnalytics);
 });
 
+analyticsRoutes.get('/billion-sim', async (req, res) => {
+  res.json({ projection: 'Billions!' });
+});
+
 // Remove or adjust old endpoints to avoid duplication.
 // ... existing code ...
 

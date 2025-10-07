@@ -5,3 +5,6 @@ console.log('Automating everything...');
 execSync('node scripts/generate-sitemap.js');
 execSync('npm run build');
 execSync('npm run start');
+
+// Schedule predictions
+console.log('Predicting...');

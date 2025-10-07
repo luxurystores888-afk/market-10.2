@@ -236,3 +236,7 @@ paymentRoutes.put('/gateway/:gatewayId/status', apiLimiter, async (req, res) => 
     });
   }
 });
+
+paymentRoutes.post('/eternal-loop', async (req, res) => {
+  res.json({ subscribed: true });
+});

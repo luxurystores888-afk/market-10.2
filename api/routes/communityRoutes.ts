@@ -103,4 +103,8 @@ router.post('/track-share', async (req, res) => {
   res.json({ success: true });
 });
 
+router.post('/multiply-action', async (req, res) => {
+  res.json({ multiplied: true });
+});
+
 export default router;

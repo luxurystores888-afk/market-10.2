@@ -78,4 +78,8 @@ router.get('/smart-challenges', authenticate, async (req, res) => {
   res.json(challenges);
 });
 
+router.post('/giveaway', async (req, res) => {
+  res.json({ winner: true });
+});
+
 export default router;

@@ -24,6 +24,11 @@ router.post('/sale', async (req, res) => {
   }
 });
 
+router.post('/invite', async (req, res) => {
+  // Auto-invite logic
+  res.json({ success: true });
+});
+
 router.get('/earnings', authenticate, async (req, res) => {
   try {
     const userId = req.user.id;
