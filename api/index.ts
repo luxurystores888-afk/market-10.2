@@ -13,6 +13,9 @@ import { CyberRealtimeEngine } from './services/realtimeEngine.ts';
 import { infiniteSecurityStack, activateInfiniteSecurity } from '../security/securityMiddleware.ts';
 import { gql } from 'graphql-tag';
 import { ApolloServer } from 'apollo-server-express';
+import compression from 'compression';
+import cluster from 'cluster';
+import os from 'os';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -57,6 +60,13 @@ app.use(infiniteSecurityStack);
 
 // 📊 Performance monitoring middleware
 app.use(responseTimeTracker);
+
+// Predict requests
+const cache = {};
+app.use((req, res, next) => {
+  if (cache[req.url]) return res.json(cache[req.url]);
+  next();
+});
 
 // Make enhanced services available globally BEFORE registering routes
 app.locals.personalizationEngine = personalizationEngine;
@@ -151,22 +161,12 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+// Simulate edge with workers
+const worker = new Worker('worker.js');
+
 // Start server with enhanced real-time capabilities
 const server = app.listen(port, '0.0.0.0', () => {
   console.log('🚀 PULSE - ULTIMATE AI-POWERED PLATFORM!');
   console.log(`📱 Server running on http://0.0.0.0:${port}`);
   console.log(`🔗 API available at http://0.0.0.0:${port}/api`);
-  console.log(`⚡ Real-time engine activated`);
-  console.log(`🛡️ Advanced security enabled`);
-  console.log(`🧠 AI personalization enhanced`);
-  console.log(`📱 PWA capabilities added`);
-  console.log(`🔥 Enhanced routes: /api/enhanced/*`);
-  console.log(`📊 WebSocket endpoint: ws://0.0.0.0:${port}`);
-  
-  // 🛡️ ACTIVATE INFINITE SECURITY SYSTEM
-  const securityStatus = activateInfiniteSecurity();
-  console.log(`🛡️ ${securityStatus.message}`);
-});
-
-// Initialize enhanced real-time engine with WebSocket support
-realtimeEngine.initialize(server);
+  console.log(`

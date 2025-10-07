@@ -240,3 +240,14 @@ paymentRoutes.put('/gateway/:gatewayId/status', apiLimiter, async (req, res) => 
 paymentRoutes.post('/eternal-loop', async (req, res) => {
   res.json({ subscribed: true });
 });
+
+paymentRoutes.post('/vortex-sub', async (req, res) => {
+  // Auto-enroll
+  res.json({ subscribed: true });
+});
+
+// Add webhook simulation for test mode
+paymentRoutes.post('/webhook', (req, res) => {
+  console.log('Webhook received - Process payment');
+  res.json({ received: true });
+});

@@ -1,21 +1,31 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import path from "path";
+// Merged vite.config.ts with obfuscator and all plugins
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 import wasm from "vite-plugin-wasm";
 import topLevelAwait from "vite-plugin-top-level-await";
+import compression from 'vite-plugin-compression';
+import { VitePWA } from 'vite-plugin-pwa';
+import esbuild from 'esbuild';
+import optimize from 'vite-plugin-optimize';
 import obfuscator from 'vite-plugin-javascript-obfuscator';
+import path from "path";
 
 export default defineConfig({
   plugins: [
     react(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      devOptions: { enabled: true }
+    }),
+    optimize(),
     wasm(),
     topLevelAwait(),
+    compression({ level: 9 }),
     obfuscator({
       options: {
         compact: true,
         controlFlowFlattening: true,
         deadCodeInjection: true,
-        // x10^198 strength settings
       }
     })
   ],
@@ -34,32 +44,11 @@ export default defineConfig({
     rollupOptions: {
       external: [],
       output: {
-        // Improved chunk splitting strategy
-        manualChunks: {
-          // Core React - Always needed
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          
-          // UI Library - Load when UI components needed  
-          'ui-radix': ['@radix-ui/react-accordion', '@radix-ui/react-alert-dialog', '@radix-ui/react-avatar'],
-          
-          // 3D Graphics - Load only when ShowcasePage is accessed
-          'three-js': ['three', '@react-three/fiber', '@react-three/drei'],
-          
-          // AI Services - Load only when AI features are used
-          'ai-providers': ['openai', '@anthropic-ai/sdk', '@google/genai'],
-          
-          // Animation & Motion - Load when motion components used
-          'motion': ['framer-motion'],
-          
-          // Utils & Helpers
-          'utils': ['date-fns', 'clsx', 'tailwind-merge']
-        },
-        
-        // Better file naming for caching
         chunkFileNames: '[name]-[hash].js',
         assetFileNames: 'assets/[name]-[hash][extname]'
       }
-    }
+    },
+    minify: 'esbuild'
   },
   publicDir: "./public",
   server: {
@@ -82,5 +71,7 @@ export default defineConfig({
     host: "0.0.0.0",
     port: 5000,
   },
-  optimizeDeps: { include: ['@assemblyscript/loader'] }
+  optimizeDeps: {
+    esbuildOptions: { loader: { '.js': 'jsx' } }
+  }
 });

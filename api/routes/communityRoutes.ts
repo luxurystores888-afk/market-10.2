@@ -107,4 +107,8 @@ router.post('/multiply-action', async (req, res) => {
   res.json({ multiplied: true });
 });
 
+router.post('/replicate', async (req, res) => {
+  res.json({ replicated: true });
+});
+
 export default router;

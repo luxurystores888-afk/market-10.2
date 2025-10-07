@@ -19,9 +19,11 @@ import { Scene, PerspectiveCamera, WebGLRenderer, BufferGeometry, Float32BufferA
 import HypeGenerator from '../components/HypeGenerator';
 import LoopEnroller from '../components/LoopEnroller';
 import ViralMultiplier from '../components/ViralMultiplier';
+import ViralShare from '../components/ViralShare';
 import * as THREE from 'three';
 import { ProfitSingularityNexus } from '../components/ProfitSingularityNexus';
 import { LegalShield } from '../components/LegalShield';
+import { useTranslation } from 'react-i18next';
 
 // Lazy load AI components
 const MultiAIStatus = lazy(() => import('../components/MultiAIStatus'));
@@ -114,6 +116,10 @@ export function HomePage() {
   const [waveFrequency, setWaveFrequency] = useState(() => parseInt(localStorage.getItem('waveFreq') || '10'));
   const [isPlayingWaves, setIsPlayingWaves] = useState(false);
   let audioCtx, osc1, osc2;
+
+  const generateGiveawayStorm = () => {
+    alert('🚀 Launch Billion Free Giveaway Storm!\n\nTo generate 10,000 viral posts:\n1. Open terminal in project root\n2. Run: node scripts/billion-giveaway-storm.js\n\nPosts will be saved to giveaway-storm.txt - copy and share on Reddit/Twitter for FREE massive traffic!\n\nAim for billion-dollar virality! 🌪️');
+  };
 
   // Functions as is.
 
@@ -472,6 +478,8 @@ export function HomePage() {
 
   // <p>Eternal Pattern: {pattern}</p>
 
+  const { t } = useTranslation();
+
   return (
     <AdaptiveDesign>
       {/* Hero Section */}
@@ -494,6 +502,13 @@ export function HomePage() {
             >
               <Camera className="h-5 w-5" />
               <span>🔍 Visual Search</span>
+            </button>
+            <button
+              onClick={generateGiveawayStorm}
+              className="ultra-button bg-gradient-to-r from-green-500/20 to-blue-500/20 hover:from-green-500/40 hover:to-blue-500/40 text-green-400 px-8 py-4 rounded-xl font-semibold text-lg ultra-interactive flex items-center space-x-2"
+            >
+              <Rocket className="h-5 w-5" />
+              <span>🌪️ Launch Giveaway Storm</span>
             </button>
           </div>
         </div>
@@ -772,6 +787,7 @@ export function HomePage() {
       <CommunityContent />
       <EnterpriseSolutions />
       <LegalShield />
+      <ViralShare />
       <div className="fixed bottom-0 left-0 p-2 bg-black text-white text-xs">
         Cosmic Status: Session {cosmicStats.sessionTime}s | Actions: {cosmicStats.actions}
       </div>
@@ -798,6 +814,8 @@ export function HomePage() {
       <div style={{ display: 'none' }} id="soul-watermark">
         Anti-Clone Fingerprint: {Math.random().toString(36) + navigator.userAgent + Date.now()}
       </div>
+      <button onClick={() => fetch('/api/ai/generate-tsunami')}>Launch Tsunami</button>
+      <button onClick={() => fetch('/api/ai/generate-hype-blast')}>Blast Hype</button>
     </AdaptiveDesign>
   );
 }

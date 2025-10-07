@@ -82,4 +82,8 @@ router.post('/giveaway', async (req, res) => {
   res.json({ winner: true });
 });
 
+router.get('/ascension', async (req, res) => {
+  res.json({ level: 1 });
+});
+
 export default router;

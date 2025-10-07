@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, varchar, boolean, integer, decimal, real, timestamp, jsonb, json, index, uniqueIndex, serial } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, varchar, boolean, integer, decimal, real, timestamp, jsonb, json, index, uniqueIndex, serial, pgView } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 // Database schema for Cyberpunk E-commerce Platform
 
@@ -33,6 +33,13 @@ export const products = pgTable("products", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
+
+// Add indexes for queries
+products.addIndex('products_price_idx', ['price']);
+// Partition for large data (future-proof)
+export const partitionedProducts = pgTable('partitioned_products', { /* similar fields */ });
+// Use bigint for IDs if needed for infinite scale
+id: bigint('id').primaryKey(),
 
 // Orders table
 export const orders = pgTable("orders", {
@@ -555,6 +562,11 @@ export const trafficMagnets = pgTable('traffic_magnets', {
   pingTime: timestamp('ping_time'),
 });
 
+export const trafficSources = pgTable('traffic_sources', {
+  id: serial('id').primaryKey(),
+  source: text('source'),
+});
+
 export const subscriptions = pgTable('subscriptions', {
   id: serial('id').primaryKey(),
   userId: text('user_id').references(() => users.id),
@@ -566,3 +578,14 @@ export const multipliers = pgTable('multipliers', {
   userId: text('user_id').references(() => users.id),
   factor: integer('factor'),
 });
+
+export const ascensionLevels = pgTable('ascension_levels', {
+  id: serial('id').primaryKey(),
+  userId: text('user_id').references(() => users.id),
+  level: integer('level'),
+});
+
+// Simulate sharding with views
+export const shardedView = pgView('sharded_view').as(qb => qb.select().from(products));
+
+export const continuumView = pgView('continuum_view').as(qb => qb.select().from(orders));
