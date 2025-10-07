@@ -3,11 +3,15 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
 import { validateBody } from '../validation.ts';
+import { blockDisposableEmail } from '../middleware/disposableEmail.ts';
+import { verifyTurnstile } from '../middleware/turnstile.ts';
+import { antiBotGuard } from '../middleware/antibot.ts';
 import { apiLimiter, strictApiLimiter } from '../middleware.ts';
 import { storage } from '../storage.ts';
 import type { InsertUser } from '../../lib/schema';
 import nodemailer from 'nodemailer';
 import { ethers } from 'ethers';
+import { appendAdminAudit } from '../services/auditLog.ts';
 
 export const authRoutes = express.Router();
 
@@ -88,7 +92,10 @@ const hashPassword = async (password: string): Promise<string> => {
  * Register new user account
  */
 authRoutes.post('/register', 
-  strictApiLimiter, // Strict limit for registration
+  strictApiLimiter,
+  antiBotGuard,
+  blockDisposableEmail,
+  verifyTurnstile,
   validateBody(registerSchema),
   async (req, res) => {
     try {
@@ -159,6 +166,8 @@ authRoutes.post('/register',
       });
 
       console.log(`🆕 New user registered: ${email} (customer)`);
+      // Audit registration (non-sensitive)
+      appendAdminAudit({ actorId: newUser.id, actorEmail: newUser.email, action: 'user.register', meta: { role: newUser.role } });
 
     } catch (error) {
       console.error('Registration error:', error);
@@ -176,6 +185,8 @@ authRoutes.post('/register',
  */
 authRoutes.post('/login',
   apiLimiter,
+  antiBotGuard,
+  verifyTurnstile,
   validateBody(loginSchema),
   async (req, res) => {
     try {
@@ -222,6 +233,7 @@ authRoutes.post('/login',
       });
 
       console.log(`🔐 User logged in: ${email} (${user.role})`);
+      appendAdminAudit({ actorId: user.id, actorEmail: user.email, action: 'user.login', meta: { role: user.role } });
 
     } catch (error) {
       console.error('Login error:', error);

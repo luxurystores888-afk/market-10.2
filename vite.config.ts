@@ -38,6 +38,9 @@ export default defineConfig({
   },
   build: {
     outDir: "./dist",
+    sourcemap: false,
+    cssMinify: true,
+    target: "es2019",
     chunkSizeWarningLimit: 500,
     rollupOptions: {
       external: [],
@@ -46,7 +49,8 @@ export default defineConfig({
         assetFileNames: 'assets/[name]-[hash][extname]'
       }
     },
-    minify: 'esbuild'
+    minify: 'esbuild',
+    terserOptions: undefined
   },
   publicDir: "./public",
   server: {
