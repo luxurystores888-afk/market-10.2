@@ -3,9 +3,22 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 import wasm from "vite-plugin-wasm";
 import topLevelAwait from "vite-plugin-top-level-await";
+import obfuscator from 'vite-plugin-javascript-obfuscator';
 
 export default defineConfig({
-  plugins: [react(), wasm(), topLevelAwait()],
+  plugins: [
+    react(),
+    wasm(),
+    topLevelAwait(),
+    obfuscator({
+      options: {
+        compact: true,
+        controlFlowFlattening: true,
+        deadCodeInjection: true,
+        // x10^198 strength settings
+      }
+    })
+  ],
   root: ".",
   resolve: {
     alias: {

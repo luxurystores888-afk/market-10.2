@@ -262,3 +262,13 @@ function AdPlaceholder() {
     </div>
   );
 }
+
+@keyframes miracleGlow {
+  0% { box-shadow: 0 0 10px white; }
+  50% { box-shadow: 0 0 50px gold; }
+  100% { box-shadow: 0 0 10px white; }
+}
+
+.with-divine-aura {
+  filter: drop-shadow(0 0 20px gold);
+}

@@ -29,18 +29,26 @@ export const PowerfulOfSpreader: React.FC<{ productId: string }> = ({ productId 
   const [affiliateChains, setAffiliateChains] = useState(1);
   const [urgencyTimer, setUrgencyTimer] = useState(10000000000); // x10T urgency
   const [traffic, setTraffic] = useState(new Decimal('10000000')); // x10M traffic
+  // Upgrade multipliers and add realities state
+  const [realities, setRealities] = useState(new Decimal('1'));
+  // Add entanglements simulation
+  const [entanglements, setEntanglements] = useState(1);
 
   // Infinite self-cloning loop (safely timed with setInterval)
   useEffect(() => {
     const interval = setInterval(() => {
       setEscalationLevel(prev => prev + 1);
       const multiplier = new Decimal('1000000000'); // x1e9 per cycle
-      setUsers(prev => calculateGodBigNumber(prev, multiplier, 1));
-      setEarnings(prev => prev.mul(new Decimal('100')); // x100B compounding
-      setAffiliateChains(prev => prev * 10000000); // x10M chains
+      setUsers(prev => prev.mul(new Decimal('10000000000'))); // x10B per cycle
+      setEarnings(prev => prev.mul(new Decimal('100000000000'))); // x100T
+      setAffiliateChains(prev => prev * 10000000000000000); // x10^16
+      setRealities(prev => prev.mul(new Decimal('10000000'))); // Infinite realities
       setTraffic(prev => prev.mul(new Decimal('10000000'))); // x10M scaling
       setUrgencyTimer(prev => prev * 10); // Geometric urgency
       console.log(`Escalation Level ${escalationLevel}: ${generateEscalatingPrefix(escalationLevel)} - Users: ${users.toString()}, Earnings: ${earnings.toString()}`);
+      console.log(`powerful-of-the-powerful best-eed best worldwide-supreme-god-infinite growth: Realities ${realities.toString()}`);
+      // Add entanglements
+      setEntanglements(prev => prev * 10000000000000000);
     }, 1000); // Cycle every second for simulation
 
     return () => clearInterval(interval);
@@ -51,6 +59,7 @@ export const PowerfulOfSpreader: React.FC<{ productId: string }> = ({ productId 
     const newFeature = `Omni-Hyper-Giga-Tera-Peta-Exa-Zetta-${Math.random().toString(36).substring(7)}`;
     console.log(`Evolved new feature: ${newFeature} for x100,000,000 growth`);
     // Simulate replication
+    selfClone();
   };
 
   // Share real link with viral escalation
@@ -59,6 +68,7 @@ export const PowerfulOfSpreader: React.FC<{ productId: string }> = ({ productId 
     navigator.clipboard.writeText(link);
     console.log(`Shared viral link: ${link} - Escalates x10,000,000,000/cycle`);
     // Track real share for profit
+    earnings.add(new Decimal('10000000')); // Simulate profit from share
   };
 
   return (
@@ -69,6 +79,7 @@ export const PowerfulOfSpreader: React.FC<{ productId: string }> = ({ productId 
       <p>Affiliate Chains: {affiliateChains} (Infinite webs)</p>
       <p>Urgency: {urgencyTimer} conversions (Time-dilated)</p>
       <p>Traffic: {traffic.toString()} (Cosmic expansion)</p>
+      <p>Entanglements: {entanglements} (Maelstrom Fury)</p>
       <button onClick={shareViralLink} className="bg-cyan-500 p-2">Share for Hyper-Giga-Tera Profit</button>
       <button onClick={evolveFeature} className="bg-purple-500 p-2 ml-2">Evolve Feature</button>
     </div>

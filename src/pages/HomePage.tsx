@@ -19,6 +19,9 @@ import { Scene, PerspectiveCamera, WebGLRenderer, BufferGeometry, Float32BufferA
 import HypeGenerator from '../components/HypeGenerator';
 import LoopEnroller from '../components/LoopEnroller';
 import ViralMultiplier from '../components/ViralMultiplier';
+import * as THREE from 'three';
+import { ProfitSingularityNexus } from '../components/ProfitSingularityNexus';
+import { LegalShield } from '../components/LegalShield';
 
 // Lazy load AI components
 const MultiAIStatus = lazy(() => import('../components/MultiAIStatus'));
@@ -287,43 +290,45 @@ export function HomePage() {
 
   // Add scene setup in useEffect
   useEffect(() => {
-    const scene = new Scene();
-    const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new WebGLRenderer();
+    // Divine particle system
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // Simple nebula (particles)
-    const geometry = new BufferGeometry();
-    const vertices = [];
-    for (let i = 0; i < 10000; i++) {
-      vertices.push(MathUtils.randFloatSpread(2000), MathUtils.randFloatSpread(2000), MathUtils.randFloatSpread(2000));
-    }
-    geometry.setAttribute('position', new Float32BufferAttribute(vertices, 3));
-    const material = new PointsMaterial({ color: 0x888888 });
-    const points = new Points(geometry, material);
-    scene.add(points);
+    // Add glowing particles
+    const particles = new THREE.Points(
+      new THREE.BufferGeometry().setFromPoints(Array.from({length: 10000}, () => new THREE.Vector3(Math.random() * 2000 - 1000, Math.random() * 2000 - 1000, Math.random() * 2000 - 1000))),
+      new THREE.PointsMaterial({ color: 0xFFD700, size: 5 }) // Golden divine color
+    );
+    scene.add(particles);
 
     camera.position.z = 5;
 
     const animate = () => {
       requestAnimationFrame(animate);
-      points.rotation.x += 0.001;
-      points.rotation.y += 0.002;
+      particles.rotation.x += 0.001;
+      particles.rotation.y += 0.001;
       renderer.render(scene, camera);
     };
     animate();
 
-    // Mouse react
-    const onMouseMove = (e) => {
-      camera.position.x = (e.clientX / window.innerWidth) * 2 - 1;
-      camera.position.y = -(e.clientY / window.innerHeight) * 2 + 1;
-    };
-    window.addEventListener('mousemove', onMouseMove);
+    // Emotional overlay
+    const overlay = document.createElement('div');
+    overlay.innerText = 'Feel the Divine Miracle – Touch Your Soul';
+    overlay.style.position = 'absolute';
+    overlay.style.top = '50%';
+    overlay.style.left = '50%';
+    overlay.style.transform = 'translate(-50%, -50%)';
+    overlay.style.color = 'gold';
+    overlay.style.fontSize = '3em';
+    overlay.style.textShadow = '0 0 20px gold';
+    document.body.appendChild(overlay);
 
     return () => {
-      window.removeEventListener('mousemove', onMouseMove);
       document.body.removeChild(renderer.domElement);
+      document.body.removeChild(overlay);
     };
   }, []);
 
@@ -766,6 +771,7 @@ export function HomePage() {
       <ParticleEffects />
       <CommunityContent />
       <EnterpriseSolutions />
+      <LegalShield />
       <div className="fixed bottom-0 left-0 p-2 bg-black text-white text-xs">
         Cosmic Status: Session {cosmicStats.sessionTime}s | Actions: {cosmicStats.actions}
       </div>
@@ -788,6 +794,10 @@ export function HomePage() {
       <HypeGenerator />
       <LoopEnroller />
       <ViralMultiplier />
+      <ProfitSingularityNexus productId="example" />
+      <div style={{ display: 'none' }} id="soul-watermark">
+        Anti-Clone Fingerprint: {Math.random().toString(36) + navigator.userAgent + Date.now()}
+      </div>
     </AdaptiveDesign>
   );
 }
