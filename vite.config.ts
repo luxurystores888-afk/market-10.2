@@ -6,7 +6,6 @@ import topLevelAwait from "vite-plugin-top-level-await";
 import compression from 'vite-plugin-compression';
 import { VitePWA } from 'vite-plugin-pwa';
 import esbuild from 'esbuild';
-import optimize from 'vite-plugin-optimize';
 import obfuscator from 'vite-plugin-javascript-obfuscator';
 import path from "path";
 
@@ -17,7 +16,6 @@ export default defineConfig({
       registerType: 'autoUpdate',
       devOptions: { enabled: true }
     }),
-    optimize(),
     wasm(),
     topLevelAwait(),
     compression({ level: 9 }),

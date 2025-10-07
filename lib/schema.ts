@@ -1,8 +1,8 @@
-import { pgTable, uuid, text, varchar, boolean, integer, decimal, real, timestamp, jsonb, json, index, uniqueIndex, serial, pgView } from "drizzle-orm/pg-core";
+// Fixed index syntax for Drizzle
+import { pgTable, uuid, text, varchar, boolean, integer, decimal, real, timestamp, jsonb, json, index, uniqueIndex, serial, pgView, bigint } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
-// Database schema for Cyberpunk E-commerce Platform
 
-// Users table - Extended for custom authentication
+// Users
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
   email: varchar("email", { length: 255 }).notNull().unique(),
@@ -19,8 +19,25 @@ export const users = pgTable("users", {
   referralCode: text('referral_code').unique(),
 });
 
-// Products table
+// Products with index in definition
 export const products = pgTable("products", {
+  id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: varchar("name", { length: 255 }).notNull(),
+  description: text("description"),
+  price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  category: varchar("category", { length: 100 }),
+  imageUrl: text("image_url"),
+  stock: integer("stock").default(0),
+  status: varchar("status", { length: 20 }).default("active"),
+  tags: text("tags").array(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+}, (table) => ({
+  priceIdx: index("products_price_idx").on(table.price),
+}));
+
+// Partitioned
+export const partitionedProducts = pgTable('partitioned_products', {
   id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
   name: varchar("name", { length: 255 }).notNull(),
   description: text("description"),
@@ -34,14 +51,12 @@ export const products = pgTable("products", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-// Add indexes for queries
-products.addIndex('products_price_idx', ['price']);
-// Partition for large data (future-proof)
-export const partitionedProducts = pgTable('partitioned_products', { /* similar fields */ });
-// Use bigint for IDs if needed for infinite scale
-id: bigint('id').primaryKey(),
+// Big ID example
+export const exampleBigId = pgTable('example', {
+  id: bigint('id', { mode: 'number' }).primaryKey(),
+});
 
-// Orders table
+// Orders
 export const orders = pgTable("orders", {
   id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
   userId: uuid("user_id").references(() => users.id),
@@ -585,7 +600,7 @@ export const ascensionLevels = pgTable('ascension_levels', {
   level: integer('level'),
 });
 
-// Simulate sharding with views
-export const shardedView = pgView('sharded_view').as(qb => qb.select().from(products));
+// Views
+export const shardedView = pgView('sharded_view').as((qb) => qb.select().from(products));
 
-export const continuumView = pgView('continuum_view').as(qb => qb.select().from(orders));
+export const continuumView = pgView('continuum_view').as((qb) => qb.select().from(orders));

@@ -44,7 +44,7 @@ interface Product {
 }
 
 // Move this to top:
-import init, { fibonacci } from './fib.wasm';
+import init, { fibonacci } from '../wasm-modules/fib.wasm'; // Adjust to correct path based on project layout
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js').then(reg => {

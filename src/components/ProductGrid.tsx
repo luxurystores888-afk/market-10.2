@@ -182,7 +182,7 @@ export function ProductGrid({ products, onAddToCart, onQuickView, loading }: Pro
           {/* Three.js AR setup */}
           <script>
             const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 40);
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
             const renderer = new THREE.WebGLRenderer({ antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             document.getElementById('ar-container').appendChild(renderer.domElement);

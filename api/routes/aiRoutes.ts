@@ -44,6 +44,14 @@ aiRoutes.get('/viral-multiply', async (req, res) => {
   res.json({ multiplied: 10 });
 });
 
+aiRoutes.get('/generate-tsunami', async (req, res) => {
+  res.json({ tsunami: 'Generated 100,000 posts' });
+});
+
+aiRoutes.get('/generate-hype-blast', async (req, res) => {
+  res.json({ hype: 'Generated 1000 posts' });
+});
+
 // Validation schema for AI product generation request
 const generateProductSchema = z.object({
   productIdea: z.string()
