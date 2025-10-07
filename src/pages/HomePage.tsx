@@ -19,6 +19,10 @@ import { Scene, PerspectiveCamera, WebGLRenderer, BufferGeometry, Float32BufferA
 import HypeGenerator from '../components/HypeGenerator';
 import LoopEnroller from '../components/LoopEnroller';
 import ViralMultiplier from '../components/ViralMultiplier';
+import ViralShare from '../components/ViralShare';
+import * as THREE from 'three';
+import { ProfitSingularityNexus } from '../components/ProfitSingularityNexus';
+import { LegalShield } from '../components/LegalShield';
 import { useTranslation } from 'react-i18next';
 
 // Lazy load AI components
@@ -40,7 +44,7 @@ interface Product {
 }
 
 // Move this to top:
-import init, { fibonacci } from './fib.wasm';
+import init, { fibonacci } from '../wasm-modules/fib.wasm'; // Adjust to correct path based on project layout
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js').then(reg => {
@@ -112,6 +116,10 @@ export function HomePage() {
   const [waveFrequency, setWaveFrequency] = useState(() => parseInt(localStorage.getItem('waveFreq') || '10'));
   const [isPlayingWaves, setIsPlayingWaves] = useState(false);
   let audioCtx, osc1, osc2;
+
+  const generateGiveawayStorm = () => {
+    alert('🚀 Launch Billion Free Giveaway Storm!\n\nTo generate 10,000 viral posts:\n1. Open terminal in project root\n2. Run: node scripts/billion-giveaway-storm.js\n\nPosts will be saved to giveaway-storm.txt - copy and share on Reddit/Twitter for FREE massive traffic!\n\nAim for billion-dollar virality! 🌪️');
+  };
 
   // Functions as is.
 
@@ -288,43 +296,45 @@ export function HomePage() {
 
   // Add scene setup in useEffect
   useEffect(() => {
-    const scene = new Scene();
-    const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new WebGLRenderer();
+    // Divine particle system
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // Simple nebula (particles)
-    const geometry = new BufferGeometry();
-    const vertices = [];
-    for (let i = 0; i < 10000; i++) {
-      vertices.push(MathUtils.randFloatSpread(2000), MathUtils.randFloatSpread(2000), MathUtils.randFloatSpread(2000));
-    }
-    geometry.setAttribute('position', new Float32BufferAttribute(vertices, 3));
-    const material = new PointsMaterial({ color: 0x888888 });
-    const points = new Points(geometry, material);
-    scene.add(points);
+    // Add glowing particles
+    const particles = new THREE.Points(
+      new THREE.BufferGeometry().setFromPoints(Array.from({length: 10000}, () => new THREE.Vector3(Math.random() * 2000 - 1000, Math.random() * 2000 - 1000, Math.random() * 2000 - 1000))),
+      new THREE.PointsMaterial({ color: 0xFFD700, size: 5 }) // Golden divine color
+    );
+    scene.add(particles);
 
     camera.position.z = 5;
 
     const animate = () => {
       requestAnimationFrame(animate);
-      points.rotation.x += 0.001;
-      points.rotation.y += 0.002;
+      particles.rotation.x += 0.001;
+      particles.rotation.y += 0.001;
       renderer.render(scene, camera);
     };
     animate();
 
-    // Mouse react
-    const onMouseMove = (e) => {
-      camera.position.x = (e.clientX / window.innerWidth) * 2 - 1;
-      camera.position.y = -(e.clientY / window.innerHeight) * 2 + 1;
-    };
-    window.addEventListener('mousemove', onMouseMove);
+    // Emotional overlay
+    const overlay = document.createElement('div');
+    overlay.innerText = 'Feel the Divine Miracle – Touch Your Soul';
+    overlay.style.position = 'absolute';
+    overlay.style.top = '50%';
+    overlay.style.left = '50%';
+    overlay.style.transform = 'translate(-50%, -50%)';
+    overlay.style.color = 'gold';
+    overlay.style.fontSize = '3em';
+    overlay.style.textShadow = '0 0 20px gold';
+    document.body.appendChild(overlay);
 
     return () => {
-      window.removeEventListener('mousemove', onMouseMove);
       document.body.removeChild(renderer.domElement);
+      document.body.removeChild(overlay);
     };
   }, []);
 
@@ -492,6 +502,13 @@ export function HomePage() {
             >
               <Camera className="h-5 w-5" />
               <span>🔍 Visual Search</span>
+            </button>
+            <button
+              onClick={generateGiveawayStorm}
+              className="ultra-button bg-gradient-to-r from-green-500/20 to-blue-500/20 hover:from-green-500/40 hover:to-blue-500/40 text-green-400 px-8 py-4 rounded-xl font-semibold text-lg ultra-interactive flex items-center space-x-2"
+            >
+              <Rocket className="h-5 w-5" />
+              <span>🌪️ Launch Giveaway Storm</span>
             </button>
           </div>
         </div>
@@ -769,6 +786,8 @@ export function HomePage() {
       <ParticleEffects />
       <CommunityContent />
       <EnterpriseSolutions />
+      <LegalShield />
+      <ViralShare />
       <div className="fixed bottom-0 left-0 p-2 bg-black text-white text-xs">
         Cosmic Status: Session {cosmicStats.sessionTime}s | Actions: {cosmicStats.actions}
       </div>
@@ -791,6 +810,12 @@ export function HomePage() {
       <HypeGenerator />
       <LoopEnroller />
       <ViralMultiplier />
+      <ProfitSingularityNexus productId="example" />
+      <div style={{ display: 'none' }} id="soul-watermark">
+        Anti-Clone Fingerprint: {Math.random().toString(36) + navigator.userAgent + Date.now()}
+      </div>
+      <button onClick={() => fetch('/api/ai/generate-tsunami')}>Launch Tsunami</button>
+      <button onClick={() => fetch('/api/ai/generate-hype-blast')}>Blast Hype</button>
     </AdaptiveDesign>
   );
 }

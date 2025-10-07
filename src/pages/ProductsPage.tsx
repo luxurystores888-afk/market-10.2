@@ -25,7 +25,7 @@ import { OrbitControls, Box } from '@pmndrs/drei';
 // Example usage: const total = computeAdd(price, tax);
 
 // Import WASM (assume fib.wasm in public or src)
-import init, { runInfiniteLoop } from './fib.wasm';
+import init, { runInfiniteLoop } from '../wasm-modules/fib.wasm'; // Adjust path
 
 // State for pattern
 const [infinitePattern, setInfinitePattern] = useState([]);
