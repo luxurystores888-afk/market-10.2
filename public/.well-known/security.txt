@@ -1,0 +1,6 @@
+Contact: mailto:security@your-domain.example
+Policy: https://your-domain.example/SECURITY
+Preferred-Languages: en
+Acknowledgments: https://your-domain.example/hall-of-fame
+Hiring: https://your-domain.example/jobs
+

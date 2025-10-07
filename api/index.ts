@@ -1,4 +1,5 @@
 import express from 'express';
+import crypto from 'crypto';
 import cors from 'cors';
 import helmet from 'helmet';
 import path from 'path';
@@ -128,14 +129,40 @@ apollo.applyMiddleware({ app });
 // Error handling middleware (must be last)
 app.use(errorHandler);
 
+// CSP nonce middleware for HTML responses
+app.use((req, res, next) => {
+  const nonce = crypto.randomBytes(16).toString('base64');
+  res.locals.cspNonce = nonce;
+  // Set strict CSP with per-request nonce for HTML. Assets remain unaffected.
+  res.setHeader(
+    'Content-Security-Policy',
+    [
+      "default-src 'self' https:",
+      `script-src 'self' 'nonce-${nonce}' https://www.googletagmanager.com https://www.google-analytics.com https://www.clarity.ms https://challenges.cloudflare.com https://js.puter.com`,
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "img-src 'self' data: https:",
+      "font-src 'self' https://fonts.gstatic.com",
+      "connect-src 'self' https: wss: https://api.openai.com https://generativelanguage.googleapis.com",
+      "frame-src 'self' https://challenges.cloudflare.com",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "frame-ancestors 'none'",
+      'upgrade-insecure-requests',
+      `report-uri /api/csp-report`
+    ].join('; ')
+  );
+  next();
+});
+
 // Serve static files in production or development
 const staticPath = path.join(__dirname, '../dist');
 app.use(express.static(staticPath));
 
 // Health check at root
 app.get('/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
+  res.setHeader('Cache-Control', 'no-store');
+  res.json({
+    status: 'OK',
     message: '🚀 Cyberpunk E-commerce Platform - Successfully Restored!',
     timestamp: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'development'
@@ -147,10 +174,20 @@ if (process.env.NODE_ENV === 'production') {
   // Serve React app for all other routes (production only)
   app.get('*', (req, res) => {
     const indexPath = path.join(__dirname, '../dist/index.html');
-    res.sendFile(indexPath, (err) => {
-      if (err) {
-        console.log('📄 Client build not found, serving basic response');
-        res.status(200).send(`
+    // Inject nonce into index.html for inline/module scripts
+    try {
+      const fs = require('fs');
+      let html = fs.readFileSync(indexPath, 'utf8');
+      const nonce = res.locals.cspNonce || '';
+      // Add nonce attribute to all script tags
+      html = html.replace(/<script(\s+)(?![^>]*nonce=)/g, `<script nonce="${nonce}" $1`);
+      // Optionally add nonce to style tags if present
+      html = html.replace(/<style(\s+)(?![^>]*nonce=)/g, `<style nonce="${nonce}" $1`);
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      res.send(html);
+    } catch (err) {
+      console.log('📄 Client build not found, serving basic response');
+      res.status(200).send(`
         <!DOCTYPE html>
         <html>
           <head>
@@ -192,9 +229,8 @@ if (process.env.NODE_ENV === 'production') {
             </div>
           </body>
         </html>
-      `);
-      }
-    });
+        `);
+    }
   });
 }
 

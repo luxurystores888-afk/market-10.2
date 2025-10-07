@@ -2,6 +2,9 @@ import express from 'express';
 import { z } from 'zod';
 import { validateBody, paymentSchema } from '../validation.ts';
 import { apiLimiter } from '../middleware/index.ts';
+import { blockDisposableEmail } from '../middleware/disposableEmail.ts';
+import { verifyTurnstile } from '../middleware/turnstile.ts';
+import { antiBotGuard } from '../middleware/antibot.ts';
 import { paymentGatewayManager } from '../services/paymentGatewayManager.ts';
 import { storage } from '../storage.ts';
 
@@ -86,7 +89,7 @@ paymentRoutes.get('/gateways', apiLimiter, async (req, res) => {
  * POST /api/payment/initiate
  * Initiate a payment through selected gateway
  */
-paymentRoutes.post('/initiate', apiLimiter, validateBody(initiatePaymentSchema), async (req, res) => {
+paymentRoutes.post('/initiate', apiLimiter, antiBotGuard, blockDisposableEmail, verifyTurnstile, validateBody(initiatePaymentSchema), async (req, res) => {
   try {
     const paymentData = req.body;
     
