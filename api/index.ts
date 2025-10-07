@@ -5,12 +5,25 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { registerRoutes } from './routes.ts';
 import { errorHandler, securityHeaders, requestLogger } from './middleware.ts';
+import { securityMiddleware } from './middleware/advancedSecurity.ts';
+import { quantumSecurityMiddleware } from './middleware/quantumSecurity.ts';
+import { enhancedAntiCloneProtection } from './middleware/enhancedAntiClone.ts';
+import { maximumProfitEngine } from './services/maximumProfitEngine.ts';
+import { advancedAIAutomation } from './services/advancedAIAutomation.ts';
+import { ultraViralGrowthEngine } from './services/ultraViralGrowthEngine.ts';
+import { infiniteProfitMultiplier } from './services/infiniteProfitMultiplier.ts';
+import { dynamicPricingAI } from './services/dynamicPricingAI.ts';
+import { socialMediaAutomation } from './services/socialMediaAutomation.ts';
+import { aiProductCreation } from './services/aiProductCreation.ts';
+import { advancedAnalytics } from './services/advancedAnalytics.ts';
+import { mobilePWAEngine } from './services/mobilePWAEngine.ts';
 import { requireAdmin } from './middleware/auth.ts';
 import { responseTimeTracker } from './middleware/performanceMonitoring.ts';
 import { cyberMartRateLimit, aiProcessingLimit, ddosProtection } from './middleware/advancedRateLimit.ts';
 import { EnhancedPersonalizationEngine } from './services/enhancedPersonalization.ts';
 import { CyberRealtimeEngine } from './services/realtimeEngine.ts';
 import { infiniteSecurityStack, activateInfiniteSecurity } from '../security/securityMiddleware.ts';
+import { enhancedAutomationSystem } from './services/enhancedAutomation.ts';
 import { gql } from 'graphql-tag';
 import { ApolloServer } from 'apollo-server-express';
 import compression from 'compression';
@@ -27,11 +40,35 @@ const port = Number(process.env.PORT) || 3001;
 const personalizationEngine = new EnhancedPersonalizationEngine();
 const realtimeEngine = new CyberRealtimeEngine();
 
-// Security and CORS middleware
+// 🛡️ MAXIMUM SECURITY MIDDLEWARE - UNHACKABLE PROTECTION
 app.use(helmet({
-  contentSecurityPolicy: false, // Disable for development
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https://api.openai.com", "https://api.anthropic.com"]
+    }
+  },
   crossOriginEmbedderPolicy: false
 }));
+
+// 🚨 ADVANCED SECURITY PROTECTION
+app.use(securityMiddleware.antiCloneProtection);
+app.use(securityMiddleware.threatDetection);
+app.use(securityMiddleware.vulnerabilityScan);
+app.use(securityMiddleware.rateLimiting);
+
+// 🛡️ QUANTUM SECURITY PROTECTION
+app.use(quantumSecurityMiddleware.quantumAntiCloneProtection);
+app.use(quantumSecurityMiddleware.quantumThreatDetection);
+app.use(quantumSecurityMiddleware.quantumVulnerabilityScan);
+app.use(quantumSecurityMiddleware.quantumRateLimiting);
+
+// 🛡️ ENHANCED ANTI-CLONE PROTECTION
+app.use(enhancedAntiCloneProtection.enhancedAntiCloneProtection);
+app.use(enhancedAntiCloneProtection.enhancedThreatDetection);
 
 // 🔒 SECURITY: Tightened CORS policy
 app.use(cors({
