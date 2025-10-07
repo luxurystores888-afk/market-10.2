@@ -15,6 +15,7 @@ import automationRoutes from './routes/automationRoutes.ts';
 import communityRoutes from './routes/communityRoutes.ts';
 import loyaltyRoutes from './routes/loyaltyRoutes.ts';
 import supportRoutes from './routes/supportRoutes.ts';
+import affiliateRoutes from './routes/affiliateRoutes.ts';
 import { validateBody, analyticsEventSchema } from './validation.ts';
 import { apiLimiter, strictApiLimiter } from './middleware.ts';
 import { requireAdmin, authenticate } from './middleware/auth.ts';
@@ -116,6 +117,9 @@ router.get('/web3/wallet/:walletAddress/nfts', web3Routes.getWalletNFTs);
 router.get('/web3/wallet/:walletAddress/transactions', web3Routes.getTransactionHistory);
 router.post('/web3/ipfs/store', web3Routes.storeIPFSFile);
 router.get('/web3/status', web3Routes.getStatus);
+
+// Mount affiliate routes
+router.use('/affiliate', affiliateRoutes);
 
 // Health check endpoint with database connectivity
 router.get('/health', async (req, res) => {

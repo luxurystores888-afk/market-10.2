@@ -51,6 +51,7 @@ const GalleryPage = lazy(() => import('./pages/GalleryPage'));
 const BlogPage = lazy(() => import('./pages/BlogPage'));
 const PersonalMicrosite = lazy(() => import('./pages/PersonalMicrosite'));
 const ProductDetails = lazy(() => import('./pages/ProductDetails'));
+const AffiliatePage = lazy(() => import('./components/AffiliateMarketing').then(m => ({ default: m.AffiliateMarketing })));
 
 import * as Sentry from '@sentry/react';
 
@@ -121,6 +122,7 @@ function App() {
                 <Route path="/blog-page" element={<BlogPage />} />
                 <Route path="/microsite/:userId" element={<PersonalMicrosite />} />
                 <Route path="/product/:productId" element={<ProductDetails />} />
+                <Route path="/affiliate" element={<AffiliatePage />} />
               </Routes>
             </Suspense>
             
