@@ -163,7 +163,9 @@ async function cacheFirst(request, cacheName) {
   const response = await fetch(request);
   
   if (response.status === 200) {
-    cache.put(request, response.clone());
+    const mutatedResponse = new Response(response.body, response);
+    mutatedResponse.headers.set('X-AntiClone-ID', Date.now() + Math.random());
+    cache.put(request, mutatedResponse);
   }
   
   return response;
@@ -178,7 +180,9 @@ async function networkFirst(request, cacheName) {
     const response = await fetch(request);
     
     if (response.status === 200) {
-      cache.put(request, response.clone());
+      const mutatedResponse = new Response(response.body, response);
+      mutatedResponse.headers.set('X-AntiClone-ID', Date.now() + Math.random());
+      cache.put(request, mutatedResponse);
     }
     
     return response;

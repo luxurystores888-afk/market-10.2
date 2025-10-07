@@ -207,4 +207,9 @@ app.get('/api/oauth/simulate', (req, res) => {
   res.json({ token: 'fake-oauth-token' });
 });
 
+router.post('/log-theft', (req, res) => {
+  console.log('Theft logged:', req.body);
+  res.json({ success: true });
+});
+
 export { router as registerRoutes };
