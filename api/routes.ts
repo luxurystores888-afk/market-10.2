@@ -382,6 +382,17 @@ router.get('/health', async (req, res) => {
   }
 });
 
+// CSP report-only endpoint (accepts JSON reports)
+router.post('/csp-report', express.json({ type: ['application/csp-report', 'application/json'] }), (req, res) => {
+  try {
+    const report = (req.body && (req.body['csp-report'] || req.body['csp_report'] || req.body)) || {};
+    console.warn('CSP report', { report, ip: req.ip, ua: req.headers['user-agent'] });
+    res.status(204).end();
+  } catch (e) {
+    res.status(204).end();
+  }
+});
+
 // Product routes are handled by productRoutes middleware mounted above
 
 // ✅ SECURITY IMPLEMENTED: Authentication system now in place

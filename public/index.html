@@ -27,11 +27,7 @@
     <link rel="icon" sizes="192x192" href="/icon-192x192.png" />
     <link rel="icon" sizes="512x512" href="/icon-512x512.png" />
     
-    <!-- 🔒 SECURITY HEADERS -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://js.puter.com https://api.openai.com https://generativelanguage.googleapis.com; img-src 'self' data: blob: https:; media-src 'self' blob: https:;" />
-    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
-    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+    <!-- Headers are set server-side; meta http-equiv CSP removed to avoid conflicts -->
     
     <!-- ⚡ PERFORMANCE OPTIMIZATION -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

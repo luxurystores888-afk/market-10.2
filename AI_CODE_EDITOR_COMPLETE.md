@@ -167,3 +167,29 @@ Visit **`/code-editor`** to begin your ultimate coding experience!
 **Status**: ✅ **ULTIMATE AI CODE EDITOR ACTIVATED - UNLIMITED EVERYTHING!** ✅
 
 You now possess the most advanced coding environment that has ever existed! 🚀💻♾️
+
+# Cloudflare WAF and Caching (Free) - Quick Steps
+
+- DNS: Move your domain to Cloudflare (Free plan).
+- SSL/TLS: Full (strict). Turn on HTTP/2, HTTP/3, Brotli.
+- HSTS: Enable with preload after validating 2-4 weeks. Preload at hstspreload.org.
+- Bot Fight Mode: Enable. Also add firewall rules below.
+
+## Firewall Rules
+
+- Block known bad countries or ASN if needed (optional).
+- Challenge high-risk paths:
+  - Path equals `/admin*`, action: Managed Challenge
+  - Path equals `/api/v1/auth/*`, action: JS Challenge
+- Rate limit (Cloudflare):
+  - `/api/*` 60 req/60s per IP → block for 10m.
+
+## Cache Rules
+
+- Cache `/assets/*`, `/_next/static/*`, images: Cache Everything, Edge Cache TTL 1 month.
+- Bypass cache for `/api/*`, `/?*` with cookies, and authenticated routes.
+- Add early hints and tiered caching.
+
+## Security Headers (Confirm)
+
+- Ensure Strict-Transport-Security, CSP, X-Content-Type-Options, Referrer-Policy, Permissions-Policy present (origin).
