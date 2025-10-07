@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RacingGame } from '../components/RacingGame';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
@@ -8,6 +8,12 @@ type GameMode = 'menu' | 'racing' | 'showroom' | 'shopping';
 
 export const GamingPage: React.FC = () => {
   const [currentMode, setCurrentMode] = useState<GameMode>('menu');
+  const [challenges, setChallenges] = useState([]);
+
+  useEffect(() => {
+    // Fetch challenges
+    setChallenges([{ title: 'Daily Challenge' }]);
+  }, []);
 
   const renderMainMenu = () => (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-cyan-900 flex items-center justify-center">

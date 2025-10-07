@@ -16,6 +16,7 @@ export const users = pgTable("users", {
   lastLogin: timestamp("last_login"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  referralCode: text('referral_code').unique(),
 });
 
 // Products table
@@ -388,13 +389,10 @@ export type InsertRedemption = typeof redemptions.$inferInsert;
 
 export const challenges = pgTable('challenges', {
   id: serial('id').primaryKey(),
-  title: varchar('title', { length: 255 }).notNull(),
-  description: text('description'),
-  type: varchar('type', { length: 50 }),
-  reward: integer('reward').notNull(),
-  target: integer('target').notNull(),
-  expiresAt: timestamp('expires_at'),
-  createdAt: timestamp('created_at').defaultNow(),
+  userId: text('user_id').references(() => users.id),
+  type: text('type'),
+  progress: integer('progress'),
+  target: integer('target'),
 });
 
 export type Challenge = typeof challenges.$inferSelect;
@@ -514,3 +512,21 @@ export type InsertRestockSubscription = typeof restockSubscriptions.$inferInsert
 
 // Example query with join
 // db.select().from(products).leftJoin(orders, eq(products.id, orders.productId));
+
+export const referrals = pgTable('referrals', {
+  id: serial('id').primaryKey(),
+  referrerId: text('referrer_id').references(() => users.id),
+  referredId: text('referred_id').references(() => users.id),
+  status: text('status').default('pending'),
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
+export const reviews = pgTable('reviews', {
+  id: serial('id').primaryKey(),
+  productId: text('product_id').references(() => products.id),
+  userId: text('user_id').references(() => users.id),
+  rating: integer('rating'),
+  title: text('title'),
+  content: text('content'),
+  createdAt: timestamp('created_at').defaultNow(),
+});

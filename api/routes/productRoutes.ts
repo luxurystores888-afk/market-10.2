@@ -111,3 +111,20 @@ productRoutes.post('/subscribe-restock', optionalAuth, async (req, res) => {
   await storage.addRestockSubscription({ productId, subscription });
   res.json({ success: true });
 });
+
+productRoutes.post('/reviews', optionalAuth, async (req, res) => {
+  const { productId, rating, title, content } = req.body;
+  const review = await storage.createReview({
+    productId,
+    userId: req.user.id,
+    rating,
+    title,
+    content
+  });
+  res.json(review);
+});
+
+productRoutes.get('/affiliate/:id', optionalAuth, async (req, res) => {
+  const affiliateUrl = `${window.location.origin}/product/${req.params.id}?aff=${req.user.id}`;
+  res.json({ url: affiliateUrl });
+});

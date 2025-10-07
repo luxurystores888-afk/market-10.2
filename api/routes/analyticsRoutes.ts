@@ -48,6 +48,17 @@ analyticsRoutes.post('/events', async (req, res) => {
   res.json({ success: true });
 });
 
+analyticsRoutes.post('/track-affiliate', async (req, res) => {
+  const { affId, productId } = req.body;
+  // Track in DB
+  res.json({ success: true });
+});
+
+analyticsRoutes.get('/user-analytics', authenticate, async (req, res) => {
+  const userAnalytics = await storage.getUserAnalytics(req.user.id);
+  res.json(userAnalytics);
+});
+
 // Remove or adjust old endpoints to avoid duplication.
 // ... existing code ...
 

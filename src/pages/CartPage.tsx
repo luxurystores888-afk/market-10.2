@@ -5,6 +5,7 @@ import { Minus, Plus, Trash2, ArrowLeft, CreditCard, Wallet, Zap } from 'lucide-
 import { Link } from 'react-router-dom';
 import { formatPrice, parsePrice } from '../utils/price';
 import { CryptoCheckout } from '../components/CryptoCheckout';
+import UpsellSuggestions from '../components/UpsellSuggestions';
 
 export function CartPage() {
   const { items, updateQuantity, removeFromCart, clearCart, totalPrice, totalItems } = useCart();
@@ -268,6 +269,7 @@ export function CartPage() {
           setShowCryptoCheckout(false);
         }}
       />
+      <UpsellSuggestions cartItems={items} />
     </div>
   );
 }

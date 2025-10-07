@@ -97,4 +97,10 @@ router.post('/blockchain-review', authenticate, async (req, res) => {
   }
 });
 
+router.post('/track-share', async (req, res) => {
+  const { productId } = req.body;
+  // Track in DB
+  res.json({ success: true });
+});
+
 export default router;

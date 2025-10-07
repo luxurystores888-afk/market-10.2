@@ -3,15 +3,17 @@ import React, { useState } from 'react';
 const NewsletterSignup = () => {
   const [email, setEmail] = useState('');
 
-  const subscribe = async () => {
-    await fetch('/api/newsletter/subscribe', { method: 'POST', body: JSON.stringify({ email }) });
-    setEmail('');
+  const handleSignup = () => {
+    fetch('/api/auth/subscribe-newsletter', {
+      method: 'POST',
+      body: JSON.stringify({ email })
+    });
   };
 
   return (
     <div>
-      <input value={email} onChange={e => setEmail(e.target.value)} placeholder="Enter email" />
-      <button onClick={subscribe}>Subscribe</button>
+      <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
+      <button onClick={handleSignup}>Signup</button>
     </div>
   );
 };

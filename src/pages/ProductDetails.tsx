@@ -12,6 +12,8 @@ import { NFTMarketplace } from '../components/NFTMarketplace';
 import { EyeTracking } from '../components/EyeTracking';
 import { MultiModalInput } from '../components/MultiModalInput';
 import { BCICompatibility } from '../components/BCICompatibility';
+import ProductReviews from '../components/ProductReviews';
+import SocialShareButton from '../components/SocialShareButton';
 
 interface Product {
   id: string;
@@ -146,6 +148,7 @@ export default function ProductDetails() {
 
           <PriceDropAlert productId={product.id} productName={product.name} />
           <QuickShareButtons productName={product.name} productUrl={window.location.href} />
+          <SocialShareButton url={window.location.href} title={product.name} />
 
           <div className="mt-8">
             <h2>Recommended Products</h2>
@@ -165,6 +168,7 @@ export default function ProductDetails() {
       <EyeTracking />
       <MultiModalInput />
       <BCICompatibility />
+      <ProductReviews productId={product.id} />
     </div>
   );
 }

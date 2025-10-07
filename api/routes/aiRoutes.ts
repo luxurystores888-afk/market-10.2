@@ -425,6 +425,16 @@ aiRoutes.get('/quick-actions',
 );
 
 /**
+ * GET /api/ai/recommendations
+ * Get rule-based product recommendations
+ */
+aiRoutes.get('/recommendations', async (req, res) => {
+  // Simple rule-based
+  const recs = []; // Based on tags
+  res.json(recs);
+});
+
+/**
  * GET /api/ai/status
  * Check Multi-AI Fusion System status and capabilities
  */
@@ -634,6 +644,13 @@ aiRoutes.post('/generate-alt-text', apiLimiter, async (req, res) => {
   // Use AI vision model
   const altText = await geminiAI.describeImage(imageUrl); // Assume method
   res.json({ altText });
+});
+
+aiRoutes.post('/keyword-suggestions', async (req, res) => {
+  const { text } = req.body;
+  // Simple mock logic or use free AI
+  const suggestions = ['keyword1', 'keyword2'];
+  res.json(suggestions);
 });
 
 // Export handled by export const declaration above

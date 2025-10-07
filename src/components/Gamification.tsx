@@ -9,6 +9,9 @@ export const Gamification: React.FC = () => {
     await executeContract(); // Verify badge on blockchain
   };
 
+  // Add challenge storage and tracking logic
+  const challenges = []; // Fetch from DB
+
   // Integrate Web3 for badges
   const mintBadge = async (achievement) => {
     // NFT minting logic

@@ -134,6 +134,14 @@ authRoutes.post('/register',
       // Generate JWT token
       const token = generateJWT(newUser.id, newUser.email, newUser.role);
 
+      // Add to register endpoint after creating user
+      const referralCode = generateReferralCode(newUser.id);
+      newUser.referralCode = referralCode;
+      await storage.updateUser(newUser);
+
+      // In register, after creating user
+      await storage.subscribeToNewsletter(newUser.email);
+
       // Return user data (excluding sensitive info) and token
       res.status(201).json({
         message: 'Account created successfully',
@@ -439,6 +447,24 @@ authRoutes.post('/logout',
   }
 );
 
+/**
+ * GET /api/auth/referral-code
+ * Get current user's referral code (requires authentication)
+ */
+authRoutes.get('/referral-code',
+  apiLimiter,
+  async (req, res) => {
+    const user = (req as any).user;
+    if (!user) {
+      return res.status(401).json({
+        error: 'Unauthorized',
+        message: 'Authentication required'
+      });
+    }
+    res.json({ referralCode: user.referralCode });
+  }
+);
+
 // Export JWT verification utility for use in other middleware
 export const verifyJWT = (token: string) => {
   try {
@@ -449,3 +475,7 @@ export const verifyJWT = (token: string) => {
 };
 
 export { JWT_SECRET };
+
+function generateReferralCode(userId: string) {
+  return `REF-${userId.slice(0,8).toUpperCase()}`;
+}

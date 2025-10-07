@@ -198,6 +198,13 @@ orderRoutes.post('/', strictApiLimiter, authenticate, validateBody(createOrderSc
       donation: orderData.donation.toString() || '0'
     };
 
+    // In POST /orders, before creating order
+    const referrer = await storage.getReferrer(user.id);
+    if (referrer) {
+      order.discountAmount = '10'; // Example 10% discount
+      // Award points to referrer
+    }
+
     // Create the order
     const newOrder = await storage.createOrder(order);
 
