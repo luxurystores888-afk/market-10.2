@@ -1,12 +1,16 @@
 // Adds Subresource Integrity (SRI) and crossorigin to external scripts/styles in public/index.html
 // Run: node scripts/add-sri.js
 
-const fs = require('fs');
-const path = require('path');
-const https = require('https');
-const crypto = require('crypto');
+import fs from 'fs';
+import path from 'path';
+import https from 'https';
+import crypto from 'crypto';
+import { fileURLToPath } from 'url';
 
-const file = path.join(process.cwd(), 'public', 'index.html');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const file = path.join(path.dirname(__dirname), 'public', 'index.html');
 let html = fs.readFileSync(file, 'utf8');
 
 async function fetchAndHash(url) {

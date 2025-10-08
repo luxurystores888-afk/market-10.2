@@ -4,7 +4,8 @@ import { authenticate } from '../middleware/auth';
 import { z } from 'zod';
 import { validateBody } from '../validation';
 import { storage } from '../storage';
-import { submitBlockchainReview } from '../blockchain';
+// Blockchain integration disabled - file not found
+// import { submitBlockchainReview } from '../blockchain';
 
 const router = express.Router();
 
@@ -88,12 +89,11 @@ router.post('/reviews', authenticate, async (req, res) => {
 router.post('/blockchain-review', authenticate, async (req, res) => {
   const { productId, rating, content } = req.body;
   try {
-    const txHash = await submitBlockchainReview(productId, rating, content);
-    // Store in DB with txHash
-    const review = await storage.createProductReview({ ...req.body, txHash });
-    res.json({ success: true, review, txHash });
+    // Blockchain integration disabled - storing review directly
+    const review = await storage.createProductReview({ ...req.body, txHash: 'disabled' });
+    res.json({ success: true, review, message: 'Blockchain integration coming soon' });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to submit blockchain review' });
+    res.status(500).json({ error: 'Failed to submit review' });
   }
 });
 

@@ -1,5 +1,5 @@
 import { db } from '../db';
-import { users, orders } from '../db/schema';
+import { users, orders } from '../../lib/schema';
 import { eq, desc, sql } from 'drizzle-orm';
 
 // 🚀 VIRAL MARKETING ENGINE - MAXIMUM REACH & CONVERSION

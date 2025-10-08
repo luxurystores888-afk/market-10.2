@@ -76,3 +76,5 @@ const ReferralShare: React.FC = () => {
     </button>
   );
 };
+
+export { ReferralShare };

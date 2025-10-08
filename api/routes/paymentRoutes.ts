@@ -1,7 +1,7 @@
 import express from 'express';
 import { z } from 'zod';
 import { validateBody, paymentSchema } from '../validation.ts';
-import { apiLimiter } from '../middleware/index.ts';
+import { apiLimiter } from '../middleware.ts';
 import { blockDisposableEmail } from '../middleware/disposableEmail.ts';
 import { verifyTurnstile } from '../middleware/turnstile.ts';
 import { antiBotGuard } from '../middleware/antibot.ts';

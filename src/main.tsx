@@ -12,6 +12,9 @@ import { Header } from './components/Header';
 // 📊 Initialize frontend performance monitoring
 import './utils/performanceMonitoring';
 
+// Import viral swarm
+import { swarmLoop } from './services/viralSwarm';
+
 // Ultra loading components
 const UltraLoadingScreen = lazy(() => import('./components/UltraLoadingScreen').then(m => ({ default: m.UltraLoadingScreen })));
 
