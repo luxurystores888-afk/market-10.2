@@ -60,6 +60,16 @@ const RealRevenueDashboard = lazy(() => import('./components/RealRevenueDashboar
 const InfiniteProfitDashboard = lazy(() => import('./components/InfiniteProfitDashboard').then(m => ({ default: m.InfiniteProfitDashboard })));
 const RealWorkingDashboard = lazy(() => import('./components/RealWorkingDashboard').then(m => ({ default: m.RealWorkingDashboard })));
 const FirstDayProfitDashboard = lazy(() => import('./components/FirstDayProfitDashboard').then(m => ({ default: m.FirstDayProfitDashboard })));
+const PayWhenYouProfitDashboard = lazy(() => import('./components/PayWhenYouProfitDashboard').then(m => ({ default: m.PayWhenYouProfitDashboard })));
+
+// Legal Pages
+const TermsOfService = lazy(() => import('./pages/TermsOfService').then(m => ({ default: m.TermsOfService })));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy').then(m => ({ default: m.PrivacyPolicy })));
+const RefundPolicy = lazy(() => import('./pages/RefundPolicy').then(m => ({ default: m.RefundPolicy })));
+
+// Checkout Pages
+const CheckoutPage = lazy(() => import('./pages/CheckoutPage').then(m => ({ default: m.CheckoutPage })));
+const OrderSuccessPage = lazy(() => import('./pages/OrderSuccessPage').then(m => ({ default: m.OrderSuccessPage })));
 
 import * as Sentry from '@sentry/react';
 
@@ -136,6 +146,16 @@ function App() {
               <Route path="/infinite-profit" element={<InfiniteProfitDashboard />} />
               <Route path="/real-working" element={<RealWorkingDashboard />} />
               <Route path="/first-day-profit" element={<FirstDayProfitDashboard />} />
+              <Route path="/pay-when-profit" element={<PayWhenYouProfitDashboard />} />
+              
+              {/* Legal Pages */}
+              <Route path="/terms" element={<TermsOfService />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/refund" element={<RefundPolicy />} />
+              
+              {/* Checkout Pages */}
+              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/order-success" element={<OrderSuccessPage />} />
               </Routes>
             </Suspense>
             
@@ -172,8 +192,6 @@ function App() {
     </BrowserRouter>
   );
 }
-
-swarmLoop();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

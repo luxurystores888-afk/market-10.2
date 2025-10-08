@@ -1,21 +1,53 @@
-# Ignore non-project directories and junk
-AppData/
-.groupbuyseotools/
-.vcpkg/
-.vscode/
-attached_assets/
-uploads/
-dist/
+# Dependencies
 node_modules/
-.vscode/
-*.log
-*.zip
-*.tar.gz
-*.gz
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+.nyc_output
+
+# Production
+dist/
+build/
+
+# Misc
 .DS_Store
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
+
+# Generated content
+generated-content/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
 Thumbs.db
-# Docker/VM runtime
-AppData/Local/Docker/
-# Any other temp/backup files
-*.bak
-*.tmp
+
+# Build
+*.tsbuildinfo
+
+# Database
+*.db
+*.sqlite
+
+# Temporary
+.tmp/
+temp/
