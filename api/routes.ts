@@ -33,6 +33,10 @@ import infiniteProfitRoutes from './routes/infiniteProfitRoutes.ts';
 import realWorkingRoutes from './routes/realWorkingRoutes.ts';
 import firstDayProfitRoutes from './routes/firstDayProfitRoutes.ts';
 import { requireAdmin, authenticate } from './middleware/auth.ts';
+import profitTrackerRoutes from './routes/profitTrackerRoutes.ts';
+import securityRoutes from './routes/securityRoutes.ts';
+import blueprintRoutes from './routes/blueprintRoutes.ts';
+import featureLockRoutes from './routes/featureLockRoutes.ts';
 
 export const router = express.Router();
 
@@ -361,6 +365,18 @@ router.use('/real-working', realWorkingRoutes);
 
 // Mount first day profit routes
 router.use('/first-day-profit', firstDayProfitRoutes);
+
+// Mount profit tracker routes (auto-reinvestment system)
+router.use('/profit-tracker', profitTrackerRoutes);
+
+// Mount security routes (real-time monitoring)
+router.use('/security', securityRoutes);
+
+// Mount blueprint routes (website map)
+router.use('/blueprint', blueprintRoutes);
+
+// Mount feature lock routes (Pay When You Profit system)
+router.use('/feature-lock', featureLockRoutes);
 
 // Health check endpoint with database connectivity
 router.get('/health', async (req, res) => {
