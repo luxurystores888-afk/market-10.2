@@ -21,42 +21,6 @@ interface Product {
   tags?: string[];
 }
 
-<<<<<<< Updated upstream
-// WASM import disabled - invalid file
-// import init, { fibonacci } from '../wasm-modules/fib.wasm';
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').then(reg => {
-    console.log('Cosmic Monitor Active!');
-  });
-}
-
-// Translations
-const translations = {
-  en: { greeting: 'Hello' },
-  ar: { greeting: 'مرحبا' }
-};
-
-// Use: <p>{translations[locale].greeting}</p>
-
-// Cache function
-const getCached = (key) => {
-  const cached = localStorage.getItem(key);
-  if (cached) {
-    const { data, time } = JSON.parse(cached);
-    if (Date.now() - time < 3600000) return data;
-  }
-  return null;
-};
-
-const setCached = (key, data) => {
-  localStorage.setItem(key, JSON.stringify({ data, time: Date.now() }));
-};
-
-// Use in fetch
-
-=======
->>>>>>> Stashed changes
 export function HomePage() {
   const navigate = useNavigate();
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
@@ -233,13 +197,13 @@ export function HomePage() {
               <p className="text-gray-400">
                 Optimized performance with instant page loads and smooth checkout experience.
               </p>
-        </div>
+            </div>
 
             {/* Feature 2 */}
             <div className="bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-purple-500/30 rounded-xl p-8 hover:border-purple-500 transition-all">
               <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-4 rounded-lg w-fit mb-4">
                 <Shield className="w-8 h-8 text-white" />
-                </div>
+              </div>
               <h3 className="text-2xl font-bold text-white mb-3">
                 Bank-Level Security
               </h3>
@@ -252,7 +216,7 @@ export function HomePage() {
             <div className="bg-gradient-to-br from-green-900/20 to-emerald-900/20 border border-green-500/30 rounded-xl p-8 hover:border-green-500 transition-all">
               <div className="bg-gradient-to-r from-green-500 to-emerald-500 p-4 rounded-lg w-fit mb-4">
                 <TrendingUp className="w-8 h-8 text-white" />
-                </div>
+              </div>
               <h3 className="text-2xl font-bold text-white mb-3">
                 Zero Fees
               </h3>
@@ -260,13 +224,13 @@ export function HomePage() {
                 Accept crypto payments with 0% transaction fees using BTCPay Server.
               </p>
             </div>
-                </div>
-            </div>
-          </section>
+          </div>
+        </div>
+      </section>
 
       {/* Featured Products */}
       <section className="py-16 px-4 bg-gradient-to-r from-black to-gray-900/50">
-            <div className="container mx-auto">
+        <div className="container mx-auto">
           <div className="flex justify-between items-center mb-12">
             <h2 className="text-4xl font-bold text-white">
               Featured Products
@@ -278,8 +242,8 @@ export function HomePage() {
               View All
               <ArrowRight className="w-5 h-5" />
             </button>
-            </div>
-
+          </div>
+          
           <ProductGrid
             products={featuredProducts}
             onAddToCart={addToCart}
@@ -290,8 +254,8 @@ export function HomePage() {
       </section>
 
       {/* Testimonials */}
-        <section className="py-16 px-4">
-          <div className="container mx-auto">
+      <section className="py-16 px-4">
+        <div className="container mx-auto">
           <h2 className="text-4xl font-bold text-center text-white mb-12">
             What Our Customers Say
           </h2>
@@ -336,8 +300,8 @@ export function HomePage() {
               <div className="text-gray-500 text-sm">Verified Customer</div>
             </div>
           </div>
-          </div>
-        </section>
+        </div>
+      </section>
 
       {/* CTA Section */}
       <section className="py-20 px-4 bg-gradient-to-r from-purple-900/30 to-cyan-900/30">
@@ -376,8 +340,8 @@ export function HomePage() {
                 <a href="/help" className="block text-gray-400 hover:text-cyan-400 transition-colors">Help Center</a>
                 <a href="/shipping" className="block text-gray-400 hover:text-cyan-400 transition-colors">Shipping Info</a>
                 <a href="/returns" className="block text-gray-400 hover:text-cyan-400 transition-colors">Returns</a>
+              </div>
             </div>
-          </div>
             
             <div>
               <h4 className="text-white font-bold mb-4">Legal</h4>
@@ -400,9 +364,9 @@ export function HomePage() {
           
           <div className="mt-12 pt-8 border-t border-gray-800 text-center text-gray-400">
             <p>&copy; 2025 Pulse. All rights reserved.</p>
+          </div>
         </div>
-      </div>
       </section>
-      </div>
+    </div>
   );
 }

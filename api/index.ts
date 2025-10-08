@@ -5,6 +5,10 @@ import helmet from 'helmet';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { registerRoutes } from './routes.ts';
+import { logger } from './utils/logger.ts';
+import { envValidator } from './utils/envValidator.ts';
+import { gracefulShutdown } from './utils/gracefulShutdown.ts';
+import { performanceMonitor } from './utils/performanceMonitor.ts';
 import { errorHandler, securityHeaders, requestLogger } from './middleware.ts';
 import { securityMiddleware } from './middleware/advancedSecurity.ts';
 import { quantumSecurityMiddleware } from './middleware/quantumSecurity.ts';
@@ -36,6 +40,15 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = Number(process.env.PORT) || 3001;
+
+// Log environment configuration
+envValidator.logConfig();
+
+// Setup graceful shutdown
+gracefulShutdown.setup();
+
+// Performance monitoring
+app.use(performanceMonitor.trackRequest);
 
 // Initialize enhanced services
 const personalizationEngine = new EnhancedPersonalizationEngine();
@@ -236,8 +249,13 @@ if (process.env.NODE_ENV === 'production') {
 
 // Start server with enhanced real-time capabilities
 const server = app.listen(port, '0.0.0.0', () => {
-  console.log('🚀 PULSE - ULTIMATE AI-POWERED PLATFORM!');
-  console.log(`📱 Server running on http://0.0.0.0:${port}`);
-  console.log(`🔗 API available at http://0.0.0.0:${port}/api`);
-  console.log(`🤖 AI systems online! Ready for billion-dollar launch!`);
+  logger.success('\n🚀 CYBER MART 2077 - Server Started!');
+  logger.info(`📱 Frontend: http://localhost:${port}`);
+  logger.info(`🔗 API: http://localhost:${port}/api`);
+  logger.info(`🛡️  Security: Active`);
+  logger.info(`💰 Profit Tracker: Monitoring`);
+  logger.info(`✅ Status: Ready for business!\n`);
 });
+
+// Register server for graceful shutdown
+gracefulShutdown.register(server, 'HTTP Server');
