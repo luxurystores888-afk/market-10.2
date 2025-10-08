@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import { db } from '../db';
-import { subscribers } from '../db/schema';
+import { subscribers } from '../../lib/schema';
 
 let transporter: nodemailer.Transporter | null = null;
 

@@ -18,9 +18,8 @@ import {
   Smartphone,
   Monitor,
   Tablet,
-  Chrome,
-  Firefox,
-  Safari,
+  Globe2,
+  Compass,
   Calendar,
   Filter,
   Download,
@@ -194,9 +193,9 @@ export function SEOAnalytics() {
 
   const getBrowserIcon = (browser: string) => {
     switch (browser) {
-      case 'Chrome': return <Chrome className="h-4 w-4" />;
-      case 'Safari': return <Safari className="h-4 w-4" />;
-      case 'Firefox': return <Firefox className="h-4 w-4" />;
+      case 'Chrome': return <Globe2 className="h-4 w-4" />;
+      case 'Safari': return <Compass className="h-4 w-4" />;
+      case 'Firefox': return <Globe className="h-4 w-4" />;
       default: return <Globe className="h-4 w-4" />;
     }
   };

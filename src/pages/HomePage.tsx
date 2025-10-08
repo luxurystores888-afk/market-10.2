@@ -43,8 +43,8 @@ interface Product {
   tags?: string[];
 }
 
-// Move this to top:
-import init, { fibonacci } from '../wasm-modules/fib.wasm'; // Adjust to correct path based on project layout
+// WASM import disabled - invalid file
+// import init, { fibonacci } from '../wasm-modules/fib.wasm';
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js').then(reg => {

@@ -9,7 +9,7 @@ import {
   Eye, 
   Brain,
   Atom,
-  Galaxy
+  Sparkle
 } from 'lucide-react';
 
 export function InfinityPage() {
@@ -116,7 +116,7 @@ export function InfinityPage() {
             </div>
 
             <div className="bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-400 rounded-xl p-6 hover:scale-105 transition-transform">
-              <Galaxy className="h-12 w-12 text-cyan-400 mx-auto mb-4" />
+              <Sparkle className="h-12 w-12 text-cyan-400 mx-auto mb-4" />
               <h3 className="text-xl font-bold text-cyan-400 mb-2">UNIVERSE CREATION</h3>
               <p className="text-gray-300 text-sm">Generate infinite realities for customers</p>
               <div className="mt-4 text-green-400 font-bold">✅ OMNIPOTENT</div>

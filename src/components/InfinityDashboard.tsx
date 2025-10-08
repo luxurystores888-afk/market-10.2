@@ -8,7 +8,7 @@ import {
   Sparkles, 
   Crown, 
   Star, 
-  Galaxy,
+  Sparkle,
   Atom,
   Eye,
   Lightbulb
@@ -172,7 +172,7 @@ export function InfinityDashboard() {
 
           <div className="bg-black/50 border border-purple-400 rounded-lg p-4 hover:border-yellow-400 transition-all">
             <div className="text-center">
-              <Galaxy className="h-12 w-12 text-purple-400 mx-auto mb-3" />
+              <Sparkle className="h-12 w-12 text-purple-400 mx-auto mb-3" />
               <h3 className="text-lg font-bold text-purple-400 mb-2">Universe Generator</h3>
               <p className="text-gray-300 text-sm mb-3">Create infinite realities in your pocket</p>
               <div className="text-2xl font-bold text-green-400 mb-3">YOUR IMAGINATION</div>

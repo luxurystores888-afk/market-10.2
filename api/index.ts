@@ -234,9 +234,6 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-// Simulate edge with workers
-const worker = new Worker('worker.js');
-
 // Start server with enhanced real-time capabilities
 const server = app.listen(port, '0.0.0.0', () => {
   console.log('🚀 PULSE - ULTIMATE AI-POWERED PLATFORM!');

@@ -26,7 +26,7 @@ import {
   ChevronDown,
   ChevronUp,
   Sparkles,
-  Robot,
+  Bot,
   Layers,
   BarChart3
 } from 'lucide-react';
@@ -605,7 +605,7 @@ export function AdvancedSearch() {
                   className="w-4 h-4 text-cyan-400 bg-gray-700 border-gray-600 rounded focus:ring-cyan-400"
                 />
                 <span className="text-gray-300 flex items-center">
-                  <Robot className="h-4 w-4 mr-2 text-purple-400" />
+                  <Bot className="h-4 w-4 mr-2 text-purple-400" />
                   Enable AI personalization for better recommendations
                 </span>
               </label>
@@ -663,7 +663,7 @@ export function AdvancedSearch() {
                   <div className="absolute top-3 right-3 flex space-x-2">
                     {result.isAIGenerated && (
                       <div className="bg-blue-500/90 text-white p-1 rounded">
-                        <Robot className="h-4 w-4" />
+                        <Bot className="h-4 w-4" />
                       </div>
                     )}
                     <button className="bg-black/50 text-white p-1 rounded hover:bg-black/70 transition-all">
@@ -742,7 +742,7 @@ export function AdvancedSearch() {
                     />
                     {result.isAIGenerated && (
                       <div className="absolute -top-2 -right-2 bg-blue-500 text-white p-1 rounded-full">
-                        <Robot className="h-3 w-3" />
+                        <Bot className="h-3 w-3" />
                       </div>
                     )}
                   </div>

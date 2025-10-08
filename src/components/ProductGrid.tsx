@@ -178,28 +178,16 @@ export function ProductGrid({ products, onAddToCart, onQuickView, loading }: Pro
         </>
       ))}
       {showAR && (
-        <div id="ar-container" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 9999 }}>
-          {/* Three.js AR setup */}
-          <script>
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.getElementById('ar-container').appendChild(renderer.domElement);
-            renderer.xr.enabled = true;
-            document.body.appendChild(ARButton.createButton(renderer));
-            // Load simple model (e.g., box for demo)
-            const geometry = new THREE.BoxGeometry(0.1, 0.1, 0.1);
-            const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-            const cube = new THREE.Mesh(geometry, material);
-            scene.add(cube);
-            cube.position.set(0, 0, -0.3);
-            function animate() {
-              renderer.setAnimationLoop(() => renderer.render(scene, camera));
-            }
-            animate();
-          </script>
-          <button onClick={() => setShowAR(false)}>Close AR</button>
+        <div id="ar-container" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 9999, background: 'rgba(0,0,0,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ textAlign: 'center', color: 'white' }}>
+            <p className="text-xl mb-4">AR Feature Coming Soon!</p>
+            <button 
+              onClick={() => setShowAR(false)}
+              className="bg-cyan-500 px-6 py-2 rounded hover:bg-cyan-600"
+            >
+              Close
+            </button>
+          </div>
         </div>
       )}
 

@@ -7,7 +7,8 @@ import { storage } from '../storage.ts';
 import { validateBody, validateQuery } from '../validation.ts';
 import { apiLimiter, strictApiLimiter } from '../middleware.ts';
 import { z } from 'zod';
-import { pipeline } from 'transformers.js';
+// Transformers.js - using @xenova/transformers
+// import { pipeline } from '@xenova/transformers';
 
 // 🔐 PRIVACY: AI routes COMPLETELY DISABLED to protect development work
 export const aiRoutes = express.Router();
