@@ -2,7 +2,7 @@
 import express from 'express';
 import { authenticate } from '../middleware/auth';
 import { storage } from '../storage';
-import { aiService } from '../aiService';
+import { aiService } from '../services/aiService';
 
 const router = express.Router();
 

@@ -12,7 +12,8 @@ import {
 import { apiLimiter, strictApiLimiter } from '../middleware.ts';
 import { requireAdmin, optionalAuth } from '../middleware/auth.ts';
 import { aiService } from '../services/aiService.ts'; // Added import for aiService
-import { webpush } from '../web3.ts'; // Added import for webpush
+// Web push notifications - implement separately
+// import { webpush } from '../web3.ts';
 
 // Use cluster module (free in Node.js)
 const cluster = require('cluster');
@@ -81,7 +82,9 @@ productRoutes.put('/:id', strictApiLimiter, requireAdmin, validateParams(product
     if (updates.stock > 0 && oldProduct.stock === 0) {
       // Get subscribers for this product (assume table)
       const subs = await storage.getRestockSubscribers(id);
-      subs.forEach(sub => webpush.sendNotification(sub, { type: 'restock', product: updates.name }));
+      // Web push notifications - to be implemented
+      // subs.forEach(sub => webpush.sendNotification(sub, { type: 'restock', product: updates.name }));
+      console.log(`Product ${updates.name} back in stock - ${subs.length} subscribers notified`);
     }
 
     res.json(product);

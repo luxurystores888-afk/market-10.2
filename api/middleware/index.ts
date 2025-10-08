@@ -1,6 +1,5 @@
-export * from './middleware';
+// Export middleware modules
 export * from './auth';
 export * from './performanceMonitoring';
 export * from './advancedRateLimit';
 export * from './securityMiddleware';
-// Adjust to actual file names

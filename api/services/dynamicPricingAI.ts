@@ -1,5 +1,5 @@
 import { db } from '../db';
-import { products, orders, users } from '../db/schema';
+import { products, orders, users } from '../../lib/schema';
 import { eq, desc, sql } from 'drizzle-orm';
 
 // 💰 DYNAMIC PRICING AI ENGINE - REAL-TIME PROFIT OPTIMIZATION
