@@ -1,0 +1,112 @@
+# 🧪 AUTOMATED A/B TESTING
+# Feature #4: Automatically test and merge winning variants
+
+name: A/B Testing Automation
+
+on:
+  schedule:
+    # Check A/B results daily
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  analyze-ab-results:
+    name: Analyze A/B Test Results
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v3
+        with:
+          ref: main
+      
+      - name: Fetch variant A metrics
+        id: variant-a
+        run: |
+          curl -X GET "${{ secrets.API_URL }}/api/analytics/variant-a-metrics" \
+            -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
+            -o variant-a-metrics.json
+          
+          CONVERSION_A=$(jq -r '.conversionRate' variant-a-metrics.json)
+          REVENUE_A=$(jq -r '.revenue' variant-a-metrics.json)
+          VISITORS_A=$(jq -r '.visitors' variant-a-metrics.json)
+          
+          echo "CONVERSION_A=$CONVERSION_A" >> $GITHUB_OUTPUT
+          echo "REVENUE_A=$REVENUE_A" >> $GITHUB_OUTPUT
+          echo "VISITORS_A=$VISITORS_A" >> $GITHUB_OUTPUT
+      
+      - name: Fetch variant B metrics
+        id: variant-b
+        run: |
+          curl -X GET "${{ secrets.API_URL }}/api/analytics/variant-b-metrics" \
+            -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
+            -o variant-b-metrics.json
+          
+          CONVERSION_B=$(jq -r '.conversionRate' variant-b-metrics.json)
+          REVENUE_B=$(jq -r '.revenue' variant-b-metrics.json)
+          VISITORS_B=$(jq -r '.visitors' variant-b-metrics.json)
+          
+          echo "CONVERSION_B=$CONVERSION_B" >> $GITHUB_OUTPUT
+          echo "REVENUE_B=$REVENUE_B" >> $GITHUB_OUTPUT
+          echo "VISITORS_B=$VISITORS_B" >> $GITHUB_OUTPUT
+      
+      - name: Determine winner
+        id: winner
+        run: |
+          A_CONV=${{ steps.variant-a.outputs.CONVERSION_A }}
+          B_CONV=${{ steps.variant-b.outputs.CONVERSION_B }}
+          A_REV=${{ steps.variant-a.outputs.REVENUE_A }}
+          B_REV=${{ steps.variant-b.outputs.REVENUE_B }}
+          
+          # Statistical significance check (simplified)
+          if (( $(echo "$A_CONV > $B_CONV * 1.05" | bc -l) )); then
+            echo "WINNER=A" >> $GITHUB_OUTPUT
+            echo "IMPROVEMENT=$(echo "scale=2; (($A_CONV - $B_CONV) / $B_CONV) * 100" | bc)" >> $GITHUB_OUTPUT
+          elif (( $(echo "$B_CONV > $A_CONV * 1.05" | bc -l) )); then
+            echo "WINNER=B" >> $GITHUB_OUTPUT
+            echo "IMPROVEMENT=$(echo "scale=2; (($B_CONV - $A_CONV) / $A_CONV) * 100" | bc)" >> $GITHUB_OUTPUT
+          else
+            echo "WINNER=NONE" >> $GITHUB_OUTPUT
+            echo "IMPROVEMENT=0" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Merge winning variant
+        if: steps.winner.outputs.WINNER != 'NONE'
+        run: |
+          WINNER=${{ steps.winner.outputs.WINNER }}
+          
+          echo "🏆 Winner: Variant $WINNER"
+          echo "📈 Improvement: ${{ steps.winner.outputs.IMPROVEMENT }}%"
+          
+          # Merge winning variant into main
+          if [ "$WINNER" = "B" ]; then
+            git fetch origin variant-b:variant-b
+            git merge variant-b -m "🏆 Auto-merge: Variant B won (+${{ steps.winner.outputs.IMPROVEMENT }}% conversion)"
+            git push origin main
+          fi
+          
+          # Variant A is already in main, no action needed
+      
+      - name: Send A/B test results
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            🧪 A/B TEST RESULTS:
+            
+            Variant A:
+              Conversion: ${{ steps.variant-a.outputs.CONVERSION_A }}%
+              Revenue: $${{ steps.variant-a.outputs.REVENUE_A }}
+              Visitors: ${{ steps.variant-a.outputs.VISITORS_A }}
+            
+            Variant B:
+              Conversion: ${{ steps.variant-b.outputs.CONVERSION_B }}%
+              Revenue: $${{ steps.variant-b.outputs.REVENUE_B }}
+              Visitors: ${{ steps.variant-b.outputs.VISITORS_B }}
+            
+            🏆 Winner: Variant ${{ steps.winner.outputs.WINNER }}
+            📈 Improvement: +${{ steps.winner.outputs.IMPROVEMENT }}%
+            
+            ${{ steps.winner.outputs.WINNER != 'NONE' && 'Winning variant auto-merged to main! 🎉' || 'Continue testing (no clear winner yet).' }}
+

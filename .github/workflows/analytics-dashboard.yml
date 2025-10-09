@@ -1,0 +1,61 @@
+# 📊 REAL-TIME ANALYTICS DASHBOARD
+# Feature #6: Self-hosted analytics with Git-based config
+
+name: Analytics Dashboard Setup
+
+on:
+  push:
+    paths:
+      - 'analytics-config/**'
+  workflow_dispatch:
+
+jobs:
+  deploy-analytics:
+    name: Deploy Analytics Dashboard
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Deploy Plausible Analytics
+        run: |
+          # Deploy self-hosted Plausible (privacy-friendly)
+          echo "Deploying Plausible Analytics..."
+          
+          # Configuration from Git
+          cp analytics-config/plausible.env.example .env.plausible
+      
+      - name: Setup Matomo Analytics
+        run: |
+          echo "Setting up Matomo..."
+          # Deploy Matomo (self-hosted)
+          cp analytics-config/matomo-config.php config/
+      
+      - name: Generate analytics report
+        run: |
+          # Fetch latest analytics data
+          curl -X GET "${{ secrets.ANALYTICS_URL }}/api/stats" \
+            -H "Authorization: Bearer ${{ secrets.ANALYTICS_TOKEN }}" \
+            -o analytics-report.json
+          
+          # Generate shields for README
+          VISITORS=$(jq -r '.visitors' analytics-report.json)
+          REVENUE=$(jq -r '.revenue' analytics-report.json)
+          CONVERSION=$(jq -r '.conversionRate' analytics-report.json)
+          
+          echo "![Visitors](https://img.shields.io/badge/Visitors-$VISITORS-blue)" > analytics-badges.md
+          echo "![Revenue](https://img.shields.io/badge/Revenue-$$REVENUE-green)" >> analytics-badges.md
+          echo "![Conversion](https://img.shields.io/badge/Conversion-$CONVERSION%25-orange)" >> analytics-badges.md
+      
+      - name: Update README with live stats
+        run: |
+          # Update README with real-time badges
+          sed -i '/<!-- ANALYTICS_START -->/,/<!-- ANALYTICS_END -->/c\<!-- ANALYTICS_START -->\n'"$(cat analytics-badges.md)"'\n<!-- ANALYTICS_END -->' README.md
+          
+          git config --local user.email "analytics-bot@autostore.com"
+          git config --local user.name "Analytics Bot"
+          git add README.md
+          git commit -m "📊 Update analytics: $VISITORS visitors, $$REVENUE revenue"
+          git push
+

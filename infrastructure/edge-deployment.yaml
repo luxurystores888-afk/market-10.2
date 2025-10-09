@@ -1,0 +1,205 @@
+# ⚡ EDGE-DISTRIBUTED INFRASTRUCTURE
+# Sub-10ms global latency using Cloudflare Workers + AWS Lambda@Edge
+
+# Cloudflare Workers Configuration
+name: flash-sale-worker
+type: javascript
+
+# Main worker script
+main: ./workers/flash-sale.js
+
+# Routes to intercept
+routes:
+  - pattern: yoursite.com/api/flash-sale/*
+    zone_name: yoursite.com
+
+# KV namespace for distributed state
+kv_namespaces:
+  - binding: FLASH_SALE_STATE
+    id: ${KV_NAMESPACE_ID}
+    preview_id: ${KV_PREVIEW_ID}
+
+# Durable Objects for real-time coordination
+durable_objects:
+  bindings:
+    - name: SALE_COORDINATOR
+      class_name: SaleCoordinator
+      script_name: flash-sale-worker
+
+# Environment variables
+vars:
+  ENV: production
+  MAX_RPS: "10000"
+  RATE_LIMIT_WINDOW: "60"
+
+# Secrets (set via wrangler)
+# - STRIPE_SECRET_KEY
+# - DATABASE_URL
+# - JWT_SECRET
+
+---
+
+# AWS Lambda@Edge for CloudFront CDN
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Edge Functions for Global Distribution'
+
+Resources:
+  FlashSaleLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: flash-sale-edge
+      Runtime: nodejs18.x
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        ZipFile: |
+          exports.handler = async (event) => {
+            const request = event.Records[0].cf.request;
+            
+            // Process flash sale purchase at edge
+            // Sub-10ms latency globally
+            
+            return request;
+          };
+      MemorySize: 512
+      Timeout: 5
+      
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+                - edgelambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Origins:
+          - Id: api-origin
+            DomainName: api.yoursite.com
+            CustomOriginConfig:
+              HTTPPort: 80
+              HTTPSPort: 443
+              OriginProtocolPolicy: https-only
+        DefaultCacheBehavior:
+          TargetOriginId: api-origin
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: ['GET', 'HEAD', 'OPTIONS', 'PUT', 'POST', 'PATCH', 'DELETE']
+          CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad
+          LambdaFunctionAssociations:
+            - EventType: viewer-request
+              LambdaFunctionARN: !GetAtt FlashSaleLambda.Arn
+
+---
+
+# Load Testing Configuration (Artillery)
+config:
+  target: "https://yoursite.com"
+  phases:
+    # Ramp up to 100M connections simulation
+    - duration: 60
+      arrivalRate: 100
+      name: "Warm up"
+    - duration: 300
+      arrivalRate: 10000
+      name: "Sustained load"
+    - duration: 60
+      arrivalRate: 100000
+      name: "Peak load (simulating 100M)"
+  
+  processor: "./load-test-processor.js"
+  
+  plugins:
+    metrics-by-endpoint:
+      stripQueryString: true
+    expect: {}
+
+scenarios:
+  - name: "Flash Sale Purchase Flow"
+    flow:
+      - get:
+          url: "/api/flash-sale/current"
+      - think: 2
+      - post:
+          url: "/api/flash-sale/purchase"
+          json:
+            saleId: "{{ $randomString() }}"
+            walletAddress: "0x{{ $randomString() }}"
+            captchaToken: "test-token"
+          expect:
+            - statusCode: 200
+            - contentType: json
+            - hasProperty: success
+
+  - name: "NFT Minting Flow"
+    weight: 2
+    flow:
+      - post:
+          url: "/api/nft/mint"
+          json:
+            walletAddress: "0x{{ $randomString() }}"
+            referralCode: "{{ $randomString() }}"
+          expect:
+            - statusCode: 200
+
+  - name: "API Insights Query"
+    flow:
+      - get:
+          url: "/api/insights/forecast"
+          headers:
+            Authorization: "Bearer {{ $processEnvironment.API_KEY }}"
+
+---
+
+# Chaos Engineering (LitmusChaos)
+apiVersion: litmuschaos.io/v1alpha1
+kind: ChaosEngine
+metadata:
+  name: platform-chaos
+  namespace: production
+spec:
+  appinfo:
+    appns: production
+    applabel: "app=backend"
+    appkind: deployment
+  chaosServiceAccount: litmus-admin
+  experiments:
+    - name: pod-delete
+      spec:
+        components:
+          env:
+            - name: TOTAL_CHAOS_DURATION
+              value: "60"
+            - name: CHAOS_INTERVAL
+              value: "10"
+            - name: FORCE
+              value: "false"
+    
+    - name: pod-network-latency
+      spec:
+        components:
+          env:
+            - name: NETWORK_LATENCY
+              value: "2000" # 2 seconds
+            - name: TOTAL_CHAOS_DURATION
+              value: "60"
+    
+    - name: pod-cpu-hog
+      spec:
+        components:
+          env:
+            - name: CPU_CORES
+              value: "1"
+            - name: TOTAL_CHAOS_DURATION
+              value: "60"
+

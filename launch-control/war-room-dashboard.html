@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Launch Control - War Room Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #0f0;
+            overflow: hidden;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: repeat(3, 1fr);
+            height: 100vh;
+            gap: 2px;
+            background: #0f0;
+        }
+        .panel {
+            background: #000;
+            padding: 20px;
+            overflow-y: auto;
+            border: 2px solid #0f0;
+        }
+        .panel h2 {
+            color: #0ff;
+            margin-bottom: 15px;
+            font-size: 24px;
+            text-transform: uppercase;
+            border-bottom: 2px solid #0ff;
+            padding-bottom: 10px;
+        }
+        .metric {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .metric-label {
+            color: #888;
+            font-size: 14px;
+        }
+        .metric-value {
+            color: #0f0;
+            font-size: 32px;
+            font-weight: bold;
+        }
+        .metric-value.warning { color: #ff0; }
+        .metric-value.critical { color: #f00; animation: blink 1s infinite; }
+        @keyframes blink {
+            50% { opacity: 0.5; }
+        }
+        .status-good { color: #0f0; }
+        .status-warning { color: #ff0; }
+        .status-critical { color: #f00; }
+        .log-entry {
+            font-size: 12px;
+            margin: 5px 0;
+            padding: 5px;
+            background: #111;
+        }
+        .timestamp {
+            color: #888;
+            margin-right: 10px;
+        }
+        #salesTicker {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #0f0;
+            color: #000;
+            padding: 20px;
+            font-size: 48px;
+            font-weight: bold;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            50% { transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Panel 1: Sales Metrics -->
+        <div class="panel">
+            <h2>💰 Real-Time Sales</h2>
+            <div class="metric">
+                <div class="metric-label">Total Revenue (24h)</div>
+                <div class="metric-value" id="totalRevenue">$0</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">NFTs Sold</div>
+                <div class="metric-value" id="nftsSold">0 / 1,000</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Sales Rate</div>
+                <div class="metric-value" id="salesRate">0/min</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Avg Transaction</div>
+                <div class="metric-value" id="avgTransaction">$0</div>
+            </div>
+        </div>
+        
+        <!-- Panel 2: Infrastructure -->
+        <div class="panel">
+            <h2>🖥️ Infrastructure</h2>
+            <div class="metric">
+                <div class="metric-label">Active Pods</div>
+                <div class="metric-value status-good" id="activePods">5</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Requests/sec</div>
+                <div class="metric-value" id="rps">0</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">P99 Latency</div>
+                <div class="metric-value" id="latency">0ms</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Error Rate</div>
+                <div class="metric-value" id="errorRate">0%</div>
+            </div>
+        </div>
+        
+        <!-- Panel 3: Social Sentiment -->
+        <div class="panel">
+            <h2>💬 Social Sentiment</h2>
+            <div class="metric">
+                <div class="metric-label">Mentions/Hour</div>
+                <div class="metric-value" id="mentions">0</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Sentiment Score</div>
+                <div class="metric-value" id="sentiment">0%</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Trending Hashtags</div>
+                <div class="metric-value" style="font-size: 18px;" id="hashtags">-</div>
+            </div>
+        </div>
+        
+        <!-- Panel 4: Payment Gateway -->
+        <div class="panel">
+            <h2>💳 Payment Status</h2>
+            <div class="metric">
+                <div class="metric-label">Stripe</div>
+                <div class="metric-value status-good">OPERATIONAL</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Coinbase</div>
+                <div class="metric-value status-good">OPERATIONAL</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Success Rate</div>
+                <div class="metric-value" id="paymentSuccess">100%</div>
+            </div>
+        </div>
+        
+        <!-- Panel 5: Blockchain -->
+        <div class="panel">
+            <h2>⛓️ Blockchain Status</h2>
+            <div class="metric">
+                <div class="metric-label">Gas Price (Polygon)</div>
+                <div class="metric-value" id="gasPrice">0 Gwei</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Pending Mints</div>
+                <div class="metric-value" id="pendingMints">0</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Confirmations</div>
+                <div class="metric-value" id="confirmations">0</div>
+            </div>
+        </div>
+        
+        <!-- Panel 6: Traffic -->
+        <div class="panel">
+            <h2>🌐 Live Traffic</h2>
+            <div class="metric">
+                <div class="metric-label">Current Visitors</div>
+                <div class="metric-value" id="currentVisitors">0</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Peak Concurrent</div>
+                <div class="metric-value" id="peakConcurrent">0</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Top Country</div>
+                <div class="metric-value" style="font-size: 24px;" id="topCountry">-</div>
+            </div>
+        </div>
+        
+        <!-- Panel 7: Incidents -->
+        <div class="panel">
+            <h2>🚨 Incident Log</h2>
+            <div id="incidents" style="font-size: 14px;"></div>
+        </div>
+        
+        <!-- Panel 8: Team Status -->
+        <div class="panel">
+            <h2>👥 Team Status</h2>
+            <div class="metric">
+                <div class="metric-label">Engineers On-Call</div>
+                <div class="metric-value status-good">5 READY</div>
+            </div>
+            <div class="metric">
+                <div class="metric-label">Avg Response Time</div>
+                <div class="metric-value">2 min</div>
+            </div>
+        </div>
+        
+        <!-- Panel 9: Activity Feed -->
+        <div class="panel">
+            <h2>📊 Live Activity</h2>
+            <div id="activityFeed"></div>
+        </div>
+    </div>
+    
+    <!-- Bottom Sales Ticker -->
+    <div id="salesTicker">
+        🚀 LIVE: $0 REVENUE | 0 NFTS SOLD | 1,000 REMAINING 🚀
+    </div>
+    
+    <script>
+        // Real-time updates (connects to your backend WebSocket)
+        const ws = new WebSocket('ws://localhost:3001/war-room');
+        
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            
+            // Update metrics
+            document.getElementById('totalRevenue').textContent = '$' + data.totalRevenue.toLocaleString();
+            document.getElementById('nftsSold').textContent = data.nftsSold + ' / 1,000';
+            document.getElementById('salesRate').textContent = data.salesPerMinute + '/min';
+            document.getElementById('avgTransaction').textContent = '$' + data.avgTransaction;
+            
+            document.getElementById('activePods').textContent = data.activePods;
+            document.getElementById('rps').textContent = data.requestsPerSecond.toLocaleString();
+            document.getElementById('latency').textContent = data.p99Latency + 'ms';
+            document.getElementById('errorRate').textContent = data.errorRate + '%';
+            
+            document.getElementById('currentVisitors').textContent = data.currentVisitors.toLocaleString();
+            document.getElementById('mentions').textContent = data.socialMentions;
+            document.getElementById('sentiment').textContent = data.sentimentScore + '%';
+            
+            // Update ticker
+            document.getElementById('salesTicker').textContent = 
+                `🚀 LIVE: $${data.totalRevenue.toLocaleString()} REVENUE | ${data.nftsSold} NFTS SOLD | ${1000 - data.nftsSold} REMAINING 🚀`;
+            
+            // Add activity
+            if (data.newSale) {
+                addActivity(`💰 SALE: ${data.newSale.product} - $${data.newSale.amount}`);
+            }
+        };
+        
+        function addActivity(message) {
+            const feed = document.getElementById('activityFeed');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `<span class="timestamp">${new Date().toLocaleTimeString()}</span>${message}`;
+            feed.prepend(entry);
+            
+            // Keep last 20 entries
+            while (feed.children.length > 20) {
+                feed.removeChild(feed.lastChild);
+            }
+        }
+        
+        // Simulate data for demo (remove when connected to real backend)
+        setInterval(() => {
+            const mockData = {
+                totalRevenue: Math.floor(Math.random() * 1000000),
+                nftsSold: Math.floor(Math.random() * 1000),
+                salesPerMinute: Math.floor(Math.random() * 10),
+                avgTransaction: 1500 + Math.floor(Math.random() * 500),
+                activePods: 5 + Math.floor(Math.random() * 95),
+                requestsPerSecond: Math.floor(Math.random() * 10000),
+                p99Latency: Math.floor(Math.random() * 50),
+                errorRate: (Math.random() * 0.5).toFixed(2),
+                currentVisitors: Math.floor(Math.random() * 100000),
+                socialMentions: Math.floor(Math.random() * 1000),
+                sentimentScore: 75 + Math.floor(Math.random() * 20)
+            };
+            
+            ws.onmessage({ data: JSON.stringify(mockData) });
+        }, 2000);
+    </script>
+</body>
+</html>
+
