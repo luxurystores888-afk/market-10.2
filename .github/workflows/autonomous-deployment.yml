@@ -172,8 +172,6 @@ jobs:
   autonomous-cost-optimization:
     name: Auto-Optimize Infrastructure Costs
     runs-on: ubuntu-latest
-    schedule:
-      - cron: '0 */6 * * *' # Every 6 hours
     
     steps:
       - name: Analyze resource usage
