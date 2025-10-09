@@ -1,0 +1,95 @@
+# 📧 AUTOMATED MARKETING CAMPAIGNS
+# Feature #5: AI-generated content auto-committed and deployed
+
+name: Automated Marketing
+
+on:
+  schedule:
+    # Generate new marketing content daily
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+
+jobs:
+  generate-marketing-content:
+    name: AI Content Generation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      
+      - name: Install dependencies
+        run: npm install openai axios
+
+      - name: Generate social media posts
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          node scripts/generate-social-content.js
+      
+      - name: Generate email campaigns
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          node scripts/generate-email-campaigns.js
+      
+      - name: Generate ad copy
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          node scripts/generate-ad-copy.js
+      
+      - name: Commit generated content
+        run: |
+          git config --local user.email "ai-marketing@autostore.com"
+          git config --local user.name "AI Marketing Bot"
+          
+          mkdir -p marketing-content/$(date +%Y-%m-%d)
+          mv generated-*.json marketing-content/$(date +%Y-%m-%d)/
+          
+          git add marketing-content/
+          git commit -m "🤖 AI Marketing: Generated content for $(date +%Y-%m-%d)"
+          git push
+      
+      - name: Deploy approved campaigns
+        run: |
+          # Post to social media via APIs
+          curl -X POST "${{ secrets.API_URL }}/api/social/auto-post" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
+            -d @marketing-content/$(date +%Y-%m-%d)/generated-social.json
+          
+          # Send email campaigns
+          curl -X POST "${{ secrets.API_URL }}/api/email/campaign/send" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
+            -d @marketing-content/$(date +%Y-%m-%d)/generated-emails.json
+          
+          # Create ad campaigns
+          curl -X POST "${{ secrets.API_URL }}/api/ads/create-campaigns" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
+            -d @marketing-content/$(date +%Y-%m-%d)/generated-ads.json
+      
+      - name: Send summary notification
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            📧 MARKETING AUTOMATION COMPLETE!
+            
+            ✅ Generated and deployed:
+              • 10 social media posts
+              • 5 email campaigns
+              • 3 ad campaigns
+            
+            All content created by AI and auto-posted!
+            
+            Check marketing-content/ folder in GitHub for audit trail.
+

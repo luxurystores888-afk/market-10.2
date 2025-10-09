@@ -1,0 +1,86 @@
+# 💰 AUTOMATED PRICE OPTIMIZATION
+# Feature #2: AI-Powered Dynamic Pricing Every 15 Minutes
+
+name: Price Optimization
+
+on:
+  schedule:
+    # Run every 15 minutes
+    - cron: '*/15 * * * *'
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  optimize-prices:
+    name: AI Price Optimization
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+      
+      - name: Install dependencies
+        run: |
+          npm install axios dotenv
+      
+      - name: Fetch sales data
+        id: sales-data
+        run: |
+          # Fetch real-time sales data from API
+          curl -X GET "${{ secrets.API_URL }}/api/analytics/sales-velocity" \
+            -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
+            -o sales-data.json
+      
+      - name: Fetch inventory data
+        run: |
+          curl -X GET "${{ secrets.API_URL }}/api/products/inventory" \
+            -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
+            -o inventory-data.json
+      
+      - name: Run AI price optimization
+        id: optimize
+        run: |
+          node scripts/ai-price-optimizer.js
+      
+      - name: Apply optimized prices
+        run: |
+          curl -X POST "${{ secrets.API_URL }}/api/pricing/bulk-update" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" \
+            -d @optimized-prices.json
+      
+      - name: Commit pricing changes
+        run: |
+          git config --local user.email "ai-bot@autostore.com"
+          git config --local user.name "AI Price Optimizer"
+          
+          # Save pricing audit trail
+          mkdir -p pricing-history
+          cp optimized-prices.json pricing-history/prices-$(date +%Y%m%d-%H%M%S).json
+          
+          git add pricing-history/
+          git commit -m "🤖 AI Price Optimization: $(date)" || echo "No changes"
+          git push || echo "Nothing to push"
+      
+      - name: Send optimization report
+        if: success()
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            💰 PRICE OPTIMIZATION COMPLETE!
+            
+            ⏰ Time: $(date)
+            📊 Products optimized: ${{ steps.optimize.outputs.count }}
+            📈 Avg price change: ${{ steps.optimize.outputs.avg_change }}%
+            💵 Expected revenue impact: +${{ steps.optimize.outputs.revenue_impact }}
+            
+            Prices updated automatically! 🎯
+

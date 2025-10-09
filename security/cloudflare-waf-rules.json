@@ -1,0 +1,83 @@
+{
+  "comment": "Cloudflare WAF Rules for Cyber Mart 2077",
+  "rules": [
+    {
+      "id": "block_bad_bots",
+      "action": "block",
+      "expression": "(cf.client.bot) and not (cf.verified_bot_category in {\"Search Engine Crawler\" \"Monitoring & Analytics\"})",
+      "description": "Block malicious bots, allow legitimate crawlers"
+    },
+    {
+      "id": "rate_limit_api",
+      "action": "challenge",
+      "expression": "(http.request.uri.path contains \"/api/\") and (rate(http.request.uri.path, 1m) > 100)",
+      "description": "Rate limit API endpoints to 100 requests/min"
+    },
+    {
+      "id": "block_sql_injection",
+      "action": "block",
+      "expression": "(http.request.uri.query contains \"union select\") or (http.request.uri.query contains \"drop table\") or (http.request.body contains \"1=1\")",
+      "description": "Block SQL injection attempts"
+    },
+    {
+      "id": "block_xss",
+      "action": "block",
+      "expression": "(http.request.uri.query contains \"<script\") or (http.request.body contains \"javascript:\")",
+      "description": "Block XSS attacks"
+    },
+    {
+      "id": "rate_limit_checkout",
+      "action": "managed_challenge",
+      "expression": "(http.request.uri.path eq \"/api/orders\") and (rate(ip.src, 1m) > 10)",
+      "description": "Strict rate limit on checkout to prevent abuse"
+    },
+    {
+      "id": "geo_block_high_fraud",
+      "action": "challenge",
+      "expression": "ip.geoip.country in {\"XX\" \"YY\"} and http.request.uri.path contains \"/checkout\"",
+      "description": "Challenge high-fraud countries at checkout"
+    },
+    {
+      "id": "ddos_protection",
+      "action": "block",
+      "expression": "(rate(ip.src, 10s) > 50)",
+      "description": "Block IPs making >50 requests in 10 seconds"
+    },
+    {
+      "id": "protect_admin",
+      "action": "js_challenge",
+      "expression": "(http.request.uri.path contains \"/admin\") and not (ip.src in $trusted_ips)",
+      "description": "Extra protection for admin panel"
+    }
+  ],
+  "rate_limiting": {
+    "enabled": true,
+    "rules": [
+      {
+        "id": "global_rate_limit",
+        "characteristics": ["ip.src"],
+        "period": 60,
+        "requests_per_period": 100,
+        "mitigation_timeout": 600,
+        "action": "challenge"
+      },
+      {
+        "id": "api_rate_limit",
+        "match": "http.request.uri.path contains \"/api/\"",
+        "characteristics": ["ip.src", "cf.colo.id"],
+        "period": 60,
+        "requests_per_period": 60,
+        "action": "block"
+      },
+      {
+        "id": "flash_sale_rate_limit",
+        "match": "http.request.uri.path eq \"/api/flash-sale/purchase\"",
+        "characteristics": ["ip.src"],
+        "period": 60,
+        "requests_per_period": 5,
+        "action": "block"
+      }
+    ]
+  }
+}
+
