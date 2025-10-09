@@ -2,7 +2,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { ProductGrid } from '../components/ProductGrid';
 import { Filter, SortAsc } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '../components/ui/dialog';
-import handTrack from 'handtrackjs';
+import * as handTrack from 'handtrackjs';
 import { P2PShopping } from '../components/P2PShopping';
 import { P2PTrade } from '../components/P2PTrade';
 import StoryFeed from '../components/StoryFeed';

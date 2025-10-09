@@ -32,4 +32,5 @@ const P2PShopping = ({ peerId }) => {
   );
 };
 
+export { P2PShopping };
 export default P2PShopping;

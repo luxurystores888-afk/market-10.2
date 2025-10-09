@@ -106,10 +106,10 @@ export function CheckoutPage() {
       // Simulate order processing
       const order = {
         items: cart,
-        shipping: shippingInfo,
+        shippingInfo: shippingInfo,
         payment: paymentMethod,
         subtotal: calculateSubtotal(),
-        shipping: calculateShipping(),
+        shippingCost: calculateShipping(),
         total: calculateTotal(),
         timestamp: new Date().toISOString()
       };

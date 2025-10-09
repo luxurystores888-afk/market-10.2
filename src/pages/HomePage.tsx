@@ -21,42 +21,6 @@ interface Product {
   tags?: string[];
 }
 
-<<<<<<< Updated upstream
-// WASM import disabled - invalid file
-// import init, { fibonacci } from '../wasm-modules/fib.wasm';
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').then(reg => {
-    console.log('Cosmic Monitor Active!');
-  });
-}
-
-// Translations
-const translations = {
-  en: { greeting: 'Hello' },
-  ar: { greeting: 'مرحبا' }
-};
-
-// Use: <p>{translations[locale].greeting}</p>
-
-// Cache function
-const getCached = (key) => {
-  const cached = localStorage.getItem(key);
-  if (cached) {
-    const { data, time } = JSON.parse(cached);
-    if (Date.now() - time < 3600000) return data;
-  }
-  return null;
-};
-
-const setCached = (key, data) => {
-  localStorage.setItem(key, JSON.stringify({ data, time: Date.now() }));
-};
-
-// Use in fetch
-
-=======
->>>>>>> Stashed changes
 export function HomePage() {
   const navigate = useNavigate();
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
