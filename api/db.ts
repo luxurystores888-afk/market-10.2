@@ -1,18 +1,45 @@
-import { drizzle as pgDrizzle } from 'drizzle-orm/pg-core';
-import { drizzle as memDrizzle } from 'drizzle-orm/memory'; // If memory driver available, else use simple object mock
+import { drizzle } from 'drizzle-orm/neon-http';
+import { neon } from '@neondatabase/serverless';
+
+// Initialize database connection
+const databaseUrl = process.env.DATABASE_URL || "postgresql://postgres:password@localhost:5432/cybermart2077";
 
 let db;
 
 try {
-  db = pgDrizzle(process.env.DATABASE_URL || "postgresql://postgres:password@localhost:5432/cybermart2077");
-  console.log('Connected to real Postgres DB');
+  // Use Neon serverless driver
+  const sql = neon(databaseUrl);
+  db = drizzle(sql);
+  console.log('✅ Connected to database successfully');
 } catch (error) {
-  console.error('DB connection failed - using mock in-memory mode');
-  // Simple mock DB
+  console.error('❌ Database connection failed:', error);
+  
+  // Fallback to mock database for development
   db = {
-    query: () => ({ rows: [] }), // Mock query function
-    // Add more mock methods as needed for app functionality
+    select: () => ({
+      from: () => ({
+        where: () => ({
+          limit: () => Promise.resolve([]),
+        }),
+        limit: () => Promise.resolve([]),
+      }),
+    }),
+    insert: () => ({
+      values: () => Promise.resolve({ rows: [] }),
+    }),
+    update: () => ({
+      set: () => ({
+        where: () => Promise.resolve({ rows: [] }),
+      }),
+    }),
+    delete: () => ({
+      where: () => Promise.resolve({ rows: [] }),
+    }),
+    execute: () => Promise.resolve({ rows: [] }),
+    query: () => Promise.resolve({ rows: [] }),
   };
+  
+  console.warn('⚠️  Using mock database. Please configure DATABASE_URL environment variable.');
 }
 
 // Export db

@@ -1,6 +1,8 @@
 import OpenAI from "openai";
-import Anthropic from '@anthropic-ai/sdk';
-import { GoogleGenAI } from "@google/genai";
+// Note: Anthropic and Google AI SDKs are optional - install if needed:
+// npm install @anthropic-ai/sdk @google/generative-ai
+// import Anthropic from '@anthropic-ai/sdk';
+// import { GoogleGenerativeAI } from "@google/generative-ai";
 import type { InsertAIGeneration } from "../../lib/schema";
 
 // the newest OpenAI model is "gpt-5" which was released August 7, 2025. do not change this unless explicitly requested by the user
@@ -81,8 +83,8 @@ interface CircuitBreakerState {
 
 export class AIService {
   private openai: OpenAI | null;
-  private anthropic: Anthropic | null;
-  private gemini: GoogleGenAI | null;
+  private anthropic: any | null; // Type: Anthropic SDK (install @anthropic-ai/sdk if needed)
+  private gemini: any | null; // Type: GoogleGenerativeAI (install @google/generative-ai if needed)
   private xai: OpenAI | null; // Using OpenAI interface for xAI
   private deepseek: OpenAI | null; // Using OpenAI interface for DeepSeek
   private customApi: OpenAI | null; // Custom API integration

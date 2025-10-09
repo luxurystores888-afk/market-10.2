@@ -7,4 +7,6 @@ export default defineConfig({
   dbCredentials: {
     url: process.env.DATABASE_URL || "postgresql://postgres:password@localhost:5432/cybermart2077",
   },
+  verbose: true,
+  strict: true,
 });
