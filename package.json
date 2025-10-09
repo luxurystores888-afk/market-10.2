@@ -1,9 +1,26 @@
 {
   "name": "cyber-mart-2077",
   "version": "1.0.0",
-  "description": "CYBER MART 2077 - ULTIMATE CYBERPUNK E-COMMERCE",
+  "description": "A modern, full-stack e-commerce platform with cyberpunk aesthetics",
   "type": "module",
   "license": "MIT",
+  "author": "Cyber Mart Team",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/luxurystores888-afk/market-10.2.git"
+  },
+  "keywords": [
+    "ecommerce",
+    "cyberpunk",
+    "react",
+    "typescript",
+    "express",
+    "postgresql"
+  ],
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=9.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "dev:server": "cross-env NODE_ENV=development PORT=3001 tsx api/index.ts",

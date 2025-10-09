@@ -1,136 +1,496 @@
-# 🚀 CYBER MART 2077 - DEPLOYMENT GUIDE
+# Deployment Guide
 
-## 📦 ONE-CLICK DEPLOYMENT TO NEW ACCOUNT
+This guide covers deploying Cyber Mart 2077 to various platforms.
 
-### **Step 1: Download ZIP**
-Download your complete CYBER MART 2077 project as ZIP from Replit.
+## Table of Contents
 
-### **Step 2: Upload to New Account**
-1. Create new Replit account or use existing one
-2. Upload the ZIP file to new Replit project
-3. **That's it!** The system will auto-setup everything
+- [Prerequisites](#prerequisites)
+- [Environment Variables](#environment-variables)
+- [Railway](#railway)
+- [Vercel](#vercel)
+- [Heroku](#heroku)
+- [AWS](#aws)
+- [Docker](#docker)
+- [VPS/Self-Hosted](#vpsself-hosted)
 
-### **Step 3: Automatic Setup Process**
-When you upload the ZIP, the system automatically:
+## Prerequisites
 
-1. **Installs Dependencies**: `npm install` runs automatically
-2. **Sets up Environment**: Creates `.env` from template
-3. **Initializes Database**: Pushes schema and populates with cyberpunk products
-4. **Configures Git**: Initializes repository for version control
-5. **Tests System**: Verifies all components are working
-6. **Starts Services**: Launches both frontend and backend
+Before deploying, ensure you have:
 
-## ⚡ INSTANT COMMANDS
+- ✅ PostgreSQL database (can use hosted services)
+- ✅ Environment variables configured
+- ✅ Stripe account (for payments)
+- ✅ Domain name (optional but recommended)
 
-After setup completes, use these commands:
+## Environment Variables
 
-```bash
-# Quick start everything
-npm run quick-start
+Required environment variables for production:
 
-# Start automation system
-npm run automation:start
+```env
+# Database
+DATABASE_URL=postgresql://user:password@host:5432/database
 
-# Check automation status  
-npm run automation:status
+# Authentication
+JWT_SECRET=your-super-secret-jwt-key-min-32-chars
 
-# Stop automation
-npm run automation:stop
+# Server
+NODE_ENV=production
+PORT=3001
+
+# Payment (Optional)
+STRIPE_SECRET_KEY=sk_live_...
+
+# AI Features (Optional)
+OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-## 🔧 MANUAL SETUP (If Needed)
+## Railway
 
-If automatic setup doesn't work, run manually:
+Railway offers easy deployment with free tier options.
+
+### Steps
+
+1. **Install Railway CLI**:
+   ```bash
+   npm install -g @railway/cli
+   ```
+
+2. **Login to Railway**:
+   ```bash
+   railway login
+   ```
+
+3. **Initialize Project**:
+   ```bash
+   railway init
+   ```
+
+4. **Add PostgreSQL**:
+   ```bash
+   railway add postgresql
+   ```
+
+5. **Set Environment Variables**:
+   ```bash
+   railway variables set JWT_SECRET=your-secret-key
+   railway variables set NODE_ENV=production
+   ```
+
+6. **Deploy**:
+   ```bash
+   railway up
+   ```
+
+7. **Run Database Migrations**:
+   ```bash
+   railway run npm run db:push
+   ```
+
+### Configuration
+
+Create `railway.json`:
+
+```json
+{
+  "$schema": "https://railway.app/railway.schema.json",
+  "build": {
+    "builder": "NIXPACKS",
+    "buildCommand": "npm install && npm run build"
+  },
+  "deploy": {
+    "startCommand": "npm start",
+    "restartPolicyType": "ON_FAILURE",
+    "restartPolicyMaxRetries": 10
+  }
+}
+```
+
+## Vercel
+
+Vercel is great for the frontend, but requires serverless functions for the API.
+
+### Frontend Deployment
+
+1. **Install Vercel CLI**:
+   ```bash
+   npm install -g vercel
+   ```
+
+2. **Deploy**:
+   ```bash
+   vercel
+   ```
+
+3. **Set Environment Variables** in Vercel Dashboard:
+   - Go to Project Settings → Environment Variables
+   - Add all required variables
+
+### Configuration
+
+Your `vercel.json` is already configured:
+
+```json
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api" }
+  ]
+}
+```
+
+### Backend (Serverless)
+
+Convert Express routes to serverless functions or use a separate backend service (Railway, Heroku).
+
+## Heroku
+
+### Steps
+
+1. **Install Heroku CLI**:
+   ```bash
+   npm install -g heroku
+   ```
+
+2. **Login**:
+   ```bash
+   heroku login
+   ```
+
+3. **Create App**:
+   ```bash
+   heroku create cyber-mart-2077
+   ```
+
+4. **Add PostgreSQL**:
+   ```bash
+   heroku addons:create heroku-postgresql:mini
+   ```
+
+5. **Set Environment Variables**:
+   ```bash
+   heroku config:set NODE_ENV=production
+   heroku config:set JWT_SECRET=your-secret-key
+   heroku config:set STRIPE_SECRET_KEY=sk_live_...
+   ```
+
+6. **Deploy**:
+   ```bash
+   git push heroku main
+   ```
+
+7. **Run Migrations**:
+   ```bash
+   heroku run npm run db:push
+   ```
+
+8. **Open App**:
+   ```bash
+   heroku open
+   ```
+
+### Procfile
+
+Create a `Procfile` in the root:
+
+```
+web: npm start
+```
+
+## AWS
+
+### Using Elastic Beanstalk
+
+1. **Install AWS CLI and EB CLI**:
+   ```bash
+   pip install awsebcli
+   ```
+
+2. **Initialize EB**:
+   ```bash
+   eb init -p node.js cyber-mart-2077
+   ```
+
+3. **Create Environment**:
+   ```bash
+   eb create production
+   ```
+
+4. **Set Environment Variables**:
+   ```bash
+   eb setenv NODE_ENV=production JWT_SECRET=your-secret DATABASE_URL=postgresql://...
+   ```
+
+5. **Deploy**:
+   ```bash
+   eb deploy
+   ```
+
+### Using EC2 (Manual)
+
+1. Launch an EC2 instance (Ubuntu 22.04 recommended)
+2. SSH into the instance
+3. Install Node.js and PostgreSQL
+4. Clone your repository
+5. Install dependencies and build
+6. Use PM2 to run the application
+7. Configure Nginx as reverse proxy
+8. Set up SSL with Let's Encrypt
+
+See [VPS/Self-Hosted](#vpsself-hosted) for detailed instructions.
+
+## Docker
+
+### Build and Run Locally
 
 ```bash
-# 1. Install everything
+# Build image
+docker build -t cyber-mart-2077 .
+
+# Run container
+docker run -p 3001:3001 --env-file .env cyber-mart-2077
+```
+
+### Using Docker Compose
+
+```bash
+# Start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+```
+
+### Deploy to Docker Hub
+
+```bash
+# Login
+docker login
+
+# Tag image
+docker tag cyber-mart-2077 yourusername/cyber-mart-2077:latest
+
+# Push
+docker push yourusername/cyber-mart-2077:latest
+```
+
+## VPS/Self-Hosted
+
+For deploying to a VPS (DigitalOcean, Linode, AWS EC2, etc.):
+
+### 1. Server Setup (Ubuntu 22.04)
+
+```bash
+# Update system
+sudo apt update && sudo apt upgrade -y
+
+# Install Node.js 20
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# Install PostgreSQL
+sudo apt install -y postgresql postgresql-contrib
+
+# Install Nginx
+sudo apt install -y nginx
+
+# Install PM2
+sudo npm install -g pm2
+
+# Install certbot (for SSL)
+sudo apt install -y certbot python3-certbot-nginx
+```
+
+### 2. Database Setup
+
+```bash
+# Switch to postgres user
+sudo -u postgres psql
+
+# Create database and user
+CREATE DATABASE cybermart;
+CREATE USER cybermartuser WITH PASSWORD 'secure-password';
+GRANT ALL PRIVILEGES ON DATABASE cybermart TO cybermartuser;
+\q
+```
+
+### 3. Application Setup
+
+```bash
+# Create app directory
+sudo mkdir -p /var/www/cyber-mart-2077
+cd /var/www/cyber-mart-2077
+
+# Clone repository
+sudo git clone https://github.com/luxurystores888-afk/market-10.2.git .
+
+# Set ownership
+sudo chown -R $USER:$USER /var/www/cyber-mart-2077
+
+# Install dependencies
 npm install
 
-# 2. Run setup script
-npm run setup
+# Create .env file
+nano .env
+# Add your environment variables
 
-# 3. Start servers
-npm run dev:server &  # Backend
-npm run dev          # Frontend
+# Build application
+npm run build
+
+# Run database migrations
+npm run db:push
 ```
 
-## 🌐 ACCESSING YOUR SYSTEM
+### 4. PM2 Setup
 
-After setup:
-- **Main Website**: Automatically opens in browser
-- **Automation Dashboard**: Navigate to `/automation`
-- **API Endpoints**: Available at `localhost:3001/api/`
-
-## 🤖 ACTIVATING AUTOMATION
-
-1. Open your website
-2. Navigate to **Automation Dashboard** (`/automation`)
-3. Click **"Start Automation"** button
-4. Watch your revenue engine activate!
-
-## 📊 FEATURES INCLUDED
-
-✅ **Complete E-commerce Platform**
-✅ **AI Product Generation** (every 6 hours)
-✅ **Dynamic Pricing Optimization** (every 30 minutes)  
-✅ **Automated Marketing Campaigns** (every 2 hours)
-✅ **Smart Inventory Management** (hourly)
-✅ **Real-time Analytics Dashboard**
-✅ **Customer Behavior Tracking**
-✅ **Revenue Forecasting**
-
-## 🔗 GITHUB SYNC
-
-The system automatically:
-- Initializes Git repository
-- Adds all automation files
-- Ready for GitHub sync
-
-To sync with GitHub:
 ```bash
-# Create GitHub repository
-gh repo create cyber-mart-2077 --public
+# Start application with PM2
+pm2 start npm --name "cyber-mart" -- start
 
-# Push to GitHub
-git remote add origin https://github.com/yourusername/cyber-mart-2077.git
-git push -u origin main
+# Save PM2 configuration
+pm2 save
+
+# Set PM2 to start on boot
+pm2 startup
 ```
 
-## 🚨 TROUBLESHOOTING
+### 5. Nginx Configuration
 
-**Database Issues:**
+Create `/etc/nginx/sites-available/cyber-mart-2077`:
+
+```nginx
+server {
+    listen 80;
+    server_name yourdomain.com www.yourdomain.com;
+
+    location / {
+        proxy_pass http://localhost:3001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    client_max_body_size 10M;
+}
+```
+
+Enable the site:
+
 ```bash
-npm run db:push --force
+sudo ln -s /etc/nginx/sites-available/cyber-mart-2077 /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl restart nginx
 ```
 
-**Permission Issues:**
+### 6. SSL Certificate
+
 ```bash
-chmod +x setup.sh
-npm run setup
+sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
 ```
 
-**Port Conflicts:**
-Check that ports 3001 (backend) and 5000 (frontend) are available.
+### 7. Firewall Setup
 
-## 💰 INFINITE PROFIT MODE
+```bash
+sudo ufw allow 'Nginx Full'
+sudo ufw allow OpenSSH
+sudo ufw enable
+```
 
-Once automation is activated:
-- New products are generated automatically
-- Prices are optimized for maximum profit
-- Marketing campaigns launch autonomously  
-- Inventory is managed automatically
-- Revenue grows without human intervention
+## Post-Deployment Checklist
 
-**Your cyberpunk empire runs itself!** 🤖
+After deploying, verify:
+
+- [ ] Application is accessible via URL
+- [ ] Database connection works
+- [ ] Authentication system works (login/signup)
+- [ ] Payment processing works (test mode first)
+- [ ] SSL certificate is active (HTTPS)
+- [ ] Environment variables are set correctly
+- [ ] API endpoints respond correctly
+- [ ] Frontend assets load properly
+- [ ] Mobile responsiveness works
+- [ ] Error logging is configured
+
+## Monitoring
+
+### Application Monitoring
+
+- Use PM2 for process monitoring
+- Set up error tracking (Sentry, Rollbar)
+- Configure logging (Winston, Morgan)
+- Monitor uptime (UptimeRobot, Pingdom)
+
+### Performance Monitoring
+
+- Google Analytics
+- New Relic or DataDog
+- Lighthouse CI for performance testing
+
+## Troubleshooting
+
+### Common Issues
+
+**Port already in use:**
+```bash
+# Find process using port
+lsof -i :3001
+# Kill process
+kill -9 PID
+```
+
+**Database connection fails:**
+- Check DATABASE_URL format
+- Verify database credentials
+- Ensure database accepts external connections
+- Check firewall rules
+
+**Build fails:**
+- Clear node_modules and reinstall
+- Check Node.js version (20+ required)
+- Verify all environment variables are set
+
+**SSL certificate issues:**
+- Ensure DNS points to server
+- Check Nginx configuration
+- Verify certbot installation
+
+## Scaling
+
+For high-traffic scenarios:
+
+1. **Use Load Balancer** - Distribute traffic across multiple instances
+2. **Database Replication** - Set up read replicas
+3. **CDN** - Use CloudFlare or AWS CloudFront
+4. **Caching** - Implement Redis for caching
+5. **Horizontal Scaling** - Deploy multiple instances with PM2 cluster mode
+
+## Backup Strategy
+
+```bash
+# Database backup
+pg_dump $DATABASE_URL > backup_$(date +%Y%m%d_%H%M%S).sql
+
+# Automated daily backups
+0 2 * * * pg_dump $DATABASE_URL > /backups/db_$(date +\%Y\%m\%d).sql
+```
+
+## Support
+
+For deployment issues:
+- Check the [GitHub Issues](https://github.com/luxurystores888-afk/market-10.2/issues)
+- Join our Discord community
+- Email: support@cybermart2077.com
 
 ---
 
-## 🎉 SUCCESS INDICATORS
-
-You'll know everything is working when you see:
-- ✅ Website loads with cyberpunk products
-- ✅ Automation dashboard shows "ACTIVE" status
-- ✅ Revenue metrics are updating in real-time
-- ✅ Products are being generated automatically
-
-**Welcome to the future of e-commerce!** 🚀💰
+**Happy Deploying! 🚀**
