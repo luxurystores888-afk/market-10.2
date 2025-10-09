@@ -1,4 +1,23 @@
-import { GoogleGenAI } from "@google/genai";
+// Note: Google AI SDK is optional - install if needed:
+// npm install @google/generative-ai
+// import { GoogleGenerativeAI } from "@google/generative-ai";
+
+// Mock implementation for development
+const GoogleGenerativeAI = class {
+  constructor(apiKey: string) {
+    console.log('GoogleGenerativeAI mock initialized with API key');
+  }
+  
+  getGenerativeModel = (model: any) => ({
+    generateContent: async (prompt: any) => ({
+      response: {
+        text: () => 'Mock response from Google AI'
+      }
+    })
+  });
+};
+
+export { GoogleGenerativeAI };
 import type { GeneratedProduct, ProductGenerationRequest } from './aiProductGenerator';
 
 // Gemini AI Service - FREE 1 Million tokens/minute

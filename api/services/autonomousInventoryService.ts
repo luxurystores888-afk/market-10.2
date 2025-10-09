@@ -1,7 +1,9 @@
 import { storage } from '../storage';
 import OpenAI from 'openai';
-import Anthropic from '@anthropic-ai/sdk';
-import { GoogleGenAI } from '@google/genai';
+// Note: Optional AI SDKs - install if needed:
+// npm install @anthropic-ai/sdk @google/generative-ai
+// import Anthropic from '@anthropic-ai/sdk';
+// import { GoogleGenerativeAI } from '@google/generative-ai';
 
 interface InventoryAlert {
   id: string;
