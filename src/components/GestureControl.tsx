@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import handTrack from 'handtrackjs';
+import * as handTrack from 'handtrackjs';
 
 export const GestureControl: React.FC = () => {
   useEffect(() => {
     const video = document.createElement('video');
+    // @ts-ignore - handtrackjs has typing issues
     handTrack.startVideo(video).then(() => {
       // Detection logic for gestures like swipe
     });
