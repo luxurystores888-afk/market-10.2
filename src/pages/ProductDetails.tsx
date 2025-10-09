@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { QuickShareButtons } from '../components/QuickShareButtons';
 import { PriceDropAlert } from '../components/PriceDropAlert';
 import { Helmet } from 'react-helmet';
-import ProductCard from '../components/ProductCard';
+import { ProductCard } from '../components/ProductCard';
 import { ThreeDShowcase } from '../components/ThreeDShowcase';
 import { VoiceControl } from '../components/VoiceControl';
 import { LiveStream } from '../components/LiveStream';
