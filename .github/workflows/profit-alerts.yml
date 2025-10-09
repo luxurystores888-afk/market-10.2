@@ -1,0 +1,99 @@
+# 📱 REAL-TIME PROFIT ALERTS
+# Feature #3: Instant notifications on every sale with profit calculation
+
+name: Real-Time Profit Alerts
+
+on:
+  # Triggered by webhook from Stripe/PayPal
+  repository_dispatch:
+    types: [new-sale]
+
+jobs:
+  process-sale-and-alert:
+    name: Process Sale & Send Alert
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Parse sale data
+        id: sale
+        run: |
+          echo "ORDER_ID=${{ github.event.client_payload.order_id }}" >> $GITHUB_OUTPUT
+          echo "AMOUNT=${{ github.event.client_payload.amount }}" >> $GITHUB_OUTPUT
+          echo "CUSTOMER=${{ github.event.client_payload.customer_email }}" >> $GITHUB_OUTPUT
+          echo "PRODUCT=${{ github.event.client_payload.product_name }}" >> $GITHUB_OUTPUT
+      
+      - name: Calculate profit margin
+        id: profit
+        run: |
+          # Get product cost from database
+          COST=$(curl -s "${{ secrets.API_URL }}/api/products/${{ steps.sale.outputs.PRODUCT }}/cost" \
+            -H "Authorization: Bearer ${{ secrets.API_TOKEN }}" | jq -r '.cost')
+          
+          # Calculate profit
+          AMOUNT=${{ steps.sale.outputs.AMOUNT }}
+          PROFIT=$(echo "$AMOUNT - $COST" | bc)
+          MARGIN=$(echo "scale=2; ($PROFIT / $AMOUNT) * 100" | bc)
+          
+          echo "PROFIT=$PROFIT" >> $GITHUB_OUTPUT
+          echo "MARGIN=$MARGIN" >> $GITHUB_OUTPUT
+          echo "COST=$COST" >> $GITHUB_OUTPUT
+      
+      - name: Send instant Telegram alert
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          message: |
+            💰 NEW SALE! 💰
+            
+            Order: #${{ steps.sale.outputs.ORDER_ID }}
+            Product: ${{ steps.sale.outputs.PRODUCT }}
+            Amount: $${{ steps.sale.outputs.AMOUNT }}
+            Cost: $${{ steps.profit.outputs.COST }}
+            ═══════════════════
+            PROFIT: $${{ steps.profit.outputs.PROFIT }}
+            Margin: ${{ steps.profit.outputs.MARGIN }}%
+            ═══════════════════
+            Customer: ${{ steps.sale.outputs.CUSTOMER }}
+            Time: $(date '+%Y-%m-%d %H:%M:%S')
+            
+            🎉 Cha-ching! 🎉
+      
+      - name: Log sale to Git (audit trail)
+        run: |
+          # Switch to sales branch
+          git fetch origin sales:sales || git checkout -b sales
+          git checkout sales
+          
+          # Create daily CSV
+          DATE=$(date '+%Y-%m-%d')
+          CSV_FILE="sales-data/sales-$DATE.csv"
+          
+          mkdir -p sales-data
+          
+          # Add header if new file
+          if [ ! -f "$CSV_FILE" ]; then
+            echo "timestamp,order_id,product,amount,cost,profit,margin,customer" > "$CSV_FILE"
+          fi
+          
+          # Append sale
+          echo "$(date '+%Y-%m-%d %H:%M:%S'),${{ steps.sale.outputs.ORDER_ID }},${{ steps.sale.outputs.PRODUCT }},${{ steps.sale.outputs.AMOUNT }},${{ steps.profit.outputs.COST }},${{ steps.profit.outputs.PROFIT }},${{ steps.profit.outputs.MARGIN }},${{ steps.sale.outputs.CUSTOMER }}" >> "$CSV_FILE"
+          
+          # Commit
+          git config --local user.email "sales-bot@autostore.com"
+          git config --local user.name "Sales Logger"
+          git add sales-data/
+          git commit -m "💰 Sale logged: $${{ steps.profit.outputs.PROFIT }} profit"
+          git push origin sales
+      
+      - name: Update daily profit counter
+        run: |
+          # Calculate today's total profit
+          DATE=$(date '+%Y-%m-%d')
+          TOTAL_TODAY=$(awk -F',' 'NR>1 {sum+=$6} END {print sum}' sales-data/sales-$DATE.csv)
+          
+          echo "📊 Today's total profit so far: $$TOTAL_TODAY"
+
