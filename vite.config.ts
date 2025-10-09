@@ -19,13 +19,14 @@ export default defineConfig({
     wasm(),
     topLevelAwait(),
     compression(),
-    obfuscator({
-      options: {
-        compact: true,
-        controlFlowFlattening: true,
-        deadCodeInjection: true,
-      }
-    })
+    // obfuscator disabled for clean build
+    // obfuscator({
+    //   options: {
+    //     compact: true,
+    //     controlFlowFlattening: true,
+    //     deadCodeInjection: true,
+    //   }
+    // })
   ],
   root: ".",
   resolve: {
