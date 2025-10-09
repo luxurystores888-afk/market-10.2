@@ -21,7 +21,7 @@ import {
   Bell, Wifi, WifiOff, Bot, Cpu, Database
 } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
-import { mockDataGenerators } from '../../lib/mockData';
+import { mockDataGenerators } from '@/lib/mockData';
 
 // Types
 interface InventoryItem {

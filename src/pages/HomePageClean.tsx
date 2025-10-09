@@ -246,8 +246,11 @@ export function HomePage() {
           
           <ProductGrid
             products={featuredProducts}
-            onAddToCart={addToCart}
-            onQuickView={(product) => navigate(`/product/${product.id}`)}
+            onAddToCart={(productId) => {
+              const product = featuredProducts.find(p => p.id === productId);
+              if (product) addToCart(product);
+            }}
+            onQuickView={(productId) => navigate(`/product/${productId}`)}
             loading={loading}
           />
         </div>

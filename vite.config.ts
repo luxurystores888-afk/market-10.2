@@ -18,7 +18,7 @@ export default defineConfig({
     }),
     wasm(),
     topLevelAwait(),
-    compression({ level: 9 }),
+    compression(),
     obfuscator({
       options: {
         compact: true,

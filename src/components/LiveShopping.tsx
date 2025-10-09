@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-<parameter name="Video, ShoppingCart, Heart, MessageCircle, Users, Zap } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Video, ShoppingCart, Heart, MessageCircle, Users, Zap } from 'lucide-react';
 
 /**
  * 📺 LIVE SHOPPING (Like TikTok Shop + QVC)
@@ -17,6 +17,12 @@ export const LiveShopping: React.FC = () => {
     { user: 'Mike', text: 'Just ordered! 🛒', time: '5s ago' },
     { user: 'Emma', text: 'What colors available?', time: '10s ago' }
   ]);
+  const [hasPreOrdered, setHasPreOrdered] = useState(false);
+
+  const handlePreOrder = () => {
+    setHasPreOrdered(true);
+    // Add to cart logic would go here
+  };
 
   useEffect(() => {
     if (isLive) {
