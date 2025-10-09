@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    
+    <!-- 🚀 PWA AND PERFORMANCE META TAGS -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="theme-color" content="#00D4FF" />
+    <meta name="background-color" content="#000000" />
+    <meta name="msapplication-TileColor" content="#00D4FF" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="CYBER MART 2077" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="monetization" content="$wallet.example.com/alice">
+    
+    <!-- 💫 CYBERPUNK BRANDING -->
+    <title>🚀 CYBER MART 2077 - Ultimate Cyberpunk E-commerce Platform</title>
+    <meta name="description" content="The ultimate cyberpunk e-commerce platform with AI consciousness, 3D holographic displays, and reality-transcending features" />
+    <meta name="keywords" content="cyberpunk, ai, 3d, holographic, shopping, e-commerce, neural, quantum, future" />
+    
+    <!-- 🎨 ICONS AND MANIFEST -->
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" sizes="192x192" href="/icon-192x192.png" />
+    <link rel="icon" sizes="512x512" href="/icon-512x512.png" />
+    
+    <!-- Headers are set server-side; meta http-equiv CSP removed to avoid conflicts -->
+    
+    <!-- ⚡ PERFORMANCE OPTIMIZATION -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" / integrity="sha384-wKq1CJFMWGad8iSG04ZeBjAuhPO++OCCnSl9Pmbwh0mea0QlXHZ+rLLW5A5b2wjP" crossorigin="anonymous">
+    <link rel="preconnect" href="https://js.puter.com" / integrity="sha384-dOALrqL7r/kqX22QK2kF69Mk3Mm9/n57OXPsYStRiNFq+3hC77IcNjSeWg8cw7g9" crossorigin="anonymous">
+    <link rel="dns-prefetch" href="https://api.openai.com" / integrity="sha384-vm5+GWfmoogpNGxEfgk9TqMcSalD5IWXe+5vSO5y8eXPX2pzcR7PNUPNvVlOyzYT" crossorigin="anonymous">
+    <link rel="dns-prefetch" href="https://generativelanguage.googleapis.com" / integrity="sha384-o+SdmONPZGMQfeWYDOyRHbCBLFsppgowAJHA03UUCGF5mIUIeuD1EYnqbMqOqxeT" crossorigin="anonymous">
+    
+    <!-- 🌈 CRITICAL CSS INLINE -->
+    <style>
+      /* Critical cyberpunk styling for instant load */
+      body { 
+        margin: 0; 
+        padding: 0; 
+        background: linear-gradient(135deg, #000 0%, #1a0033 50%, #000066 100%);
+        color: #00D4FF; 
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        overflow-x: hidden;
+      }
+      #root { min-height: 100vh; }
+      
+      /* Loading animation */
+      .loading-screen {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        background: linear-gradient(135deg, #000 0%, #1a0033 50%, #000066 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease;
+      }
+      
+      .cyber-logo {
+        font-size: 3rem;
+        font-weight: bold;
+        background: linear-gradient(45deg, #00D4FF, #FF00FF, #00FF41);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 30px rgba(0,212,255,0.5);
+        animation: pulse 2s infinite;
+      }
+      
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+      }
+      
+      .loading-bar {
+        width: 200px;
+        height: 4px;
+        background: rgba(0,212,255,0.3);
+        border-radius: 2px;
+        margin-top: 20px;
+        overflow: hidden;
+      }
+      
+      .loading-progress {
+        width: 0%;
+        height: 100%;
+        background: linear-gradient(90deg, #00D4FF, #FF00FF);
+        border-radius: 2px;
+        animation: loading 3s ease-in-out;
+      }
+      
+      @keyframes loading {
+        0% { width: 0%; }
+        100% { width: 100%; }
+      }
+    </style>
+    
+    <!-- 🤖 AI INTEGRATIONS -->
+    <!-- Puter.js Browser AI Integration - Unlimited GPT-5 Access -->
+    <script src="https://js.puter.com/v2" integrity="sha384-nsGlzROK3bhV4gEo+DZVenuvpZ6M7iyYBiMuylFMQgIwx97DkswxQz3KvCpQ3PmN" crossorigin="anonymous"></script>
+    
+    <!-- 🧠 WebAssembly Preload -->
+    <link rel="preload" href="/wasm/cyberpunk-engine.wasm" as="fetch" type="application/wasm" crossorigin />
+
+    <script type="text/javascript">
+      (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "replace-with-your-clarity-project-id");
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YOURID" integrity="sha384-wM+K7w1mhIdRSJD7x/oUzzko81zpMbDd7Bg8kxQifOuB1I6FpZJplvpGwinB5zpw" crossorigin="anonymous"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YOURID');
+    </script>
+  </head>
+  
+  <body>
+    <!-- 🚀 LOADING SCREEN -->
+    <div id="loading-screen" class="loading-screen">
+      <div class="cyber-logo">🚀 CYBER MART 2077</div>
+      <div class="loading-bar">
+        <div class="loading-progress"></div>
+      </div>
+      <div style="margin-top: 20px; color: #FF00FF; font-size: 1.1rem;">
+        ⚡ Initializing AI Consciousness...
+      </div>
+    </div>
+    
+    <!-- 📱 MAIN APP -->
+    <div id="root"></div>
+    
+    <!-- 🔧 SERVICE WORKER REGISTRATION -->
+    <script>
+      // Service Worker Registration
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(registration => {
+              console.log('🚀 Cyberpunk Service Worker registered:', registration);
+              
+              // Listen for updates
+              registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                newWorker.addEventListener('statechange', () => {
+                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                    // New version available
+                    if (confirm('🔄 New cyberpunk features available! Reload to update?')) {
+                      window.location.reload();
+                    }
+                  }
+                });
+              });
+            })
+            .catch(error => {
+              console.error('❌ Service Worker registration failed:', error);
+            });
+        });
+      }
+
+      // PWA Install Prompt
+      let deferredPrompt;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        // Show install button in UI
+        window.dispatchEvent(new CustomEvent('pwa-installable', { detail: e }));
+      });
+      
+      // Install app function
+      window.installCyberpunkApp = () => {
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+              console.log('🚀 Cyberpunk app installed!');
+            }
+            deferredPrompt = null;
+          });
+        }
+      };
+      
+      // Hide loading screen after app loads
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const loadingScreen = document.getElementById('loading-screen');
+          if (loadingScreen) {
+            loadingScreen.style.opacity = '0';
+            setTimeout(() => {
+              loadingScreen.style.display = 'none';
+            }, 500);
+          }
+        }, 2000);
+      });
+      
+      console.log('🚀 Cyberpunk PWA features loaded!');
+    </script>
+    
+    <!-- 🎮 MAIN APPLICATION -->
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- 🔊 NOTIFICATION SOUND PRELOAD -->
+    <audio id="notification-sound" preload="auto">
+      <source src="/sounds/cyber-notification.mp3" type="audio/mpeg">
+      <source src="/sounds/cyber-notification.ogg" type="audio/ogg">
+    </audio>
+  </body>
+</html>

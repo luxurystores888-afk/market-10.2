@@ -1,0 +1,132 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dynamic-pricing
+  namespace: pricing-service
+  labels:
+    app: dynamic-pricing
+    version: v1
+spec:
+  replicas: 3 # High availability
+  selector:
+    matchLabels:
+      app: dynamic-pricing
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0 # Zero-downtime deployment
+  template:
+    metadata:
+      labels:
+        app: dynamic-pricing
+        version: v1
+    spec:
+      containers:
+      - name: pricing-service
+        image: cybermart/dynamic-pricing:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3002
+          name: http
+          protocol: TCP
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: PORT
+          value: "3002"
+        - name: MAIN_API_URL
+          valueFrom:
+            configMapKeyRef:
+              name: pricing-config
+              key: main-api-url
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /api/pricing/health
+            port: 3002
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /api/pricing/readiness
+            port: 3002
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pricing-config
+  namespace: pricing-service
+data:
+  main-api-url: "http://main-api:3001"
+  update-interval: "60"
+  max-price-change: "0.20"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dynamic-pricing
+  namespace: pricing-service
+  labels:
+    app: dynamic-pricing
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 3002
+    protocol: TCP
+    name: http
+  selector:
+    app: dynamic-pricing
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: dynamic-pricing-hpa
+  namespace: pricing-service
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: dynamic-pricing
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 60
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 60
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 10
+        periodSeconds: 60
+

@@ -1,0 +1,10 @@
+// This is a placeholder; in reality, compile Rust to Wasm
+// src/wasm-modules/compute.rs: pub fn add(a: i32, b: i32) -> i32 { a + b }
+
+// Then in JS:
+import init, { add } from './compute.wasm';
+
+export async function computeAdd(a, b) {
+  await init();
+  return add(a, b);
+}

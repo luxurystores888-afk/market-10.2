@@ -1,0 +1,93 @@
+{
+  "dashboard": {
+    "title": "Revenue & Sales Dashboard",
+    "tags": ["revenue", "sales", "profit"],
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Real-Time Revenue",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "sum(rate(sales_total[5m]))",
+            "legendFormat": "Revenue/min"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Total Sales Today",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "sum(sales_total{time_range=\"today\"})"
+          }
+        ],
+        "gridPos": {"h": 4, "w": 6, "x": 12, "y": 0}
+      },
+      {
+        "id": 3,
+        "title": "Profit Margin",
+        "type": "gauge",
+        "targets": [
+          {
+            "expr": "(sum(profit_total) / sum(sales_total)) * 100"
+          }
+        ],
+        "gridPos": {"h": 4, "w": 6, "x": 18, "y": 0}
+      },
+      {
+        "id": 4,
+        "title": "Orders per Minute",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(orders_total[1m])"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8}
+      },
+      {
+        "id": 5,
+        "title": "Top Products",
+        "type": "table",
+        "targets": [
+          {
+            "expr": "topk(10, sum by (product_name) (sales_by_product_total))"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8}
+      },
+      {
+        "id": 6,
+        "title": "Conversion Rate",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "(sum(orders_total) / sum(visitors_total)) * 100"
+          }
+        ],
+        "gridPos": {"h": 4, "w": 6, "x": 0, "y": 16}
+      },
+      {
+        "id": 7,
+        "title": "Average Order Value",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "sum(sales_total) / sum(orders_total)"
+          }
+        ],
+        "gridPos": {"h": 4, "w": 6, "x": 6, "y": 16}
+      }
+    ],
+    "refresh": "5s",
+    "time": {
+      "from": "now-24h",
+      "to": "now"
+    }
+  }
+}
+
