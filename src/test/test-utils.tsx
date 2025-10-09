@@ -136,7 +136,7 @@ export const waitForLoadingToFinish = () =>
   new Promise(resolve => setTimeout(resolve, 0));
 
 // Create a mock API response
-export const createMockApiResponse = <T>(data: T, status = 200) => ({
+export const createMockApiResponse = <T,>(data: T, status = 200) => ({
   ok: status >= 200 && status < 300,
   status,
   json: async () => data,

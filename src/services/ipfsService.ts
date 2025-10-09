@@ -1,4 +1,4 @@
-import { IPFSFile } from '../../lib/types';
+import { IPFSFile } from '@/lib/types';
 
 // IPFS Service for decentralized file storage
 class IPFSService {

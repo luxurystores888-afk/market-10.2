@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Upload, Zap, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
 import { useWeb3 } from '../context/Web3Context';
 import { ipfsService } from '../services/ipfsService';
-import { NFTMetadata, IPFSFile } from '../../lib/types';
+import { NFTMetadata, IPFSFile } from '@/lib/types';
 
 interface NFTMinterProps {
   productId: string;

@@ -83,7 +83,7 @@ export class InfinityEngine {
         name: '🌌 Portable Universe Generator',
         price: 'Your Imagination',
         description: 'Creates infinite universes in your pocket',
-        stock: ∞,
+        stock: Infinity,
         category: 'Cosmic Engineering',
         effects: ['God Powers', 'Reality Creation', 'Omnipotence']
       },
@@ -99,7 +99,7 @@ export class InfinityEngine {
         name: '♾️ Infinity Multiplier Device',
         price: '1/∞ (Approaches Zero)',
         description: 'Multiplies anything by infinity',
-        stock: ∞²,
+        stock: Infinity,
         category: 'Mathematical Impossibility',
         effects: ['Infinite Everything', 'Logic Violation', 'Paradox Creation']
       },
@@ -268,7 +268,7 @@ export class InfinityEngine {
 
   // Helper methods for impossible operations
   private violatePhysicsLaws() { return 'Physics? What physics?'; }
-  private generateInfiniteCustomers() { return ∞; }
+  private generateInfiniteCustomers() { return Infinity; }
   private extractWealthFromVoid() { return Infinity; }
   private harvestFutureEarnings() { return 'Money from tomorrow'; }
   private linkAllMindsAcrossExistence() { return Promise.resolve('Universal hive mind'); }

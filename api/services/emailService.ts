@@ -1,15 +1,9 @@
-<<<<<<< Updated upstream
-import nodemailer from 'nodemailer';
-import { db } from '../db';
-import { subscribers } from '../../lib/schema';
-=======
 /**
  * 📧 EMAIL SERVICE
  * 
  * Simple email service with templates
  * Can be connected to SendGrid, SMTP, or any email provider
  */
->>>>>>> Stashed changes
 
 import { orderConfirmationEmail, orderConfirmationText, orderShippedEmail, type OrderEmailData } from '../utils/emailTemplates.ts';
 

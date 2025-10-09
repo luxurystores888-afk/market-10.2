@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MessageCircle, X, Send, Loader2, Zap, ShoppingCart, Sparkles, ChevronDown } from 'lucide-react';
-import type { ChatMessage, ChatResponse, ProductRecommendation } from '../../lib/types';
+import type { ChatMessage, ChatResponse, ProductRecommendation } from '@/lib/types';
 import { useCart } from '../context/CartContext';
 import { formatPrice } from '../utils/price';
 

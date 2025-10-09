@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Wallet, AlertCircle, CheckCircle, Clock, ExternalLink, Copy } from 'lucide-react';
 import { useWeb3 } from '../context/Web3Context';
 import { useCart } from '../context/CartContext';
-import { CryptocurrencyInfo, CryptoCheckoutData } from '../../lib/types';
+import { CryptocurrencyInfo, CryptoCheckoutData } from '@/lib/types';
 
 interface CryptoCheckoutProps {
   isOpen: boolean;

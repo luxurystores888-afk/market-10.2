@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
-import { Web3ContextType, Web3State, Web3Actions, Web3WalletInfo, CryptocurrencyInfo, SmartContractCall, IPFSFile, NFTMetadata } from '../../lib/types';
+import { Web3ContextType, Web3State, Web3Actions, Web3WalletInfo, CryptocurrencyInfo, SmartContractCall, IPFSFile, NFTMetadata } from '@/lib/types';
 
 // Initial state
 const initialState: Web3State = {

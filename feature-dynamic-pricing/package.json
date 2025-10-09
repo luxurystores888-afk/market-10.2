@@ -1,0 +1,39 @@
+{
+  "name": "dynamic-pricing-microservice",
+  "version": "1.0.0",
+  "description": "AI-driven dynamic pricing microservice for Cyber Mart 2077",
+  "type": "module",
+  "main": "dist/api.js",
+  "scripts": {
+    "dev": "tsx watch src/api.ts",
+    "build": "tsc && cp src/dashboard.html dist/",
+    "start": "node dist/api.js",
+    "test": "jest",
+    "test:integration": "jest --testPathPattern=integration",
+    "test:performance": "jest --testPathPattern=performance",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/**/*.ts",
+    "docker:build": "docker build -t cybermart/dynamic-pricing:latest .",
+    "docker:run": "docker run -p 3002:3002 cybermart/dynamic-pricing:latest",
+    "k8s:deploy": "kubectl apply -f k8s/",
+    "k8s:status": "kubectl get pods -n pricing-service"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.0",
+    "@types/jest": "^29.5.11",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "eslint": "^8.56.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
+
